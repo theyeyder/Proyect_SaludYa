@@ -1,0 +1,1 @@
+export async function listarCitas(){ return fetch('/api/citas'); }

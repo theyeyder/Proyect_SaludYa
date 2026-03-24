@@ -1,0 +1,1 @@
+export async function listarPacientes(){ return fetch('/api/pacientes'); }

@@ -1,0 +1,1 @@
+export async function listarHistorias(){ return fetch('/api/historias'); }
