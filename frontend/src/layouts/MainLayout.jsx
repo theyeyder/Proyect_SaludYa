@@ -1,16 +1,13 @@
-import React from "react";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 export default function MainLayout({ children }) {
   return (
-    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "Arial, sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       <Sidebar />
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Header />
-        <main style={{ flex: 1, padding: "24px", background: "#f7f7f7" }}>
-          {children}
-        </main>
+        <main style={{ padding: 24, flex: 1 }}>{children}</main>
       </div>
     </div>
   );
