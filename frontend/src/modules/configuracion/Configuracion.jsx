@@ -12,6 +12,11 @@ export default function Configuracion() {
         <input placeholder="Nombre" />
         <input placeholder="Apellido" />
         <select defaultValue="">
+          <option value="" disabled>Seleccione sexo</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+        <select defaultValue="">
           <option value="" disabled>Seleccione nivel de acceso</option>
           <option>Administrador</option>
           <option>Admisión</option>
