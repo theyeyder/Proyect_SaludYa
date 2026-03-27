@@ -10,7 +10,6 @@ export async function crearPaciente(data) {
   });
 
   return await response.json();
-  
 }
 
 export async function obtenerPacientes() {
