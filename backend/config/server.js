@@ -1,5 +1,5 @@
 
-const express = require("express");
+/*const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
@@ -17,4 +17,17 @@ app.get("/", (req,res)=>{
 
 app.listen(4000, ()=>{
   console.log("Servidor en http://localhost:4000");
+});
+*/
+
+require("dotenv").config();
+const app = require("../app");
+const connectDB = require("./database");
+
+const PORT = process.env.PORT || 4000;
+
+connectDB();
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
