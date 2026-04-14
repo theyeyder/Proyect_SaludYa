@@ -1,309 +1,329 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   crearPaciente,
-  obtenerPacientes,
   buscarPacientePorDocumento,
 } from "../../api/pacientesApi";
 
 export default function RegistrarPaciente() {
   const [form, setForm] = useState({
     nombres: "",
-    tipoIdentificacion: "",
+    tipoIdentificacion: "CC",
     numeroIdentificacion: "",
     ciudad: "",
     direccion: "",
     fechaNacimiento: "",
     sintomas: "",
-    alergico: "",
+    alergico: "No",
     acompanante: "",
-    sexo: "",
+    sexo: "Masculino",
   });
 
-  const [pacientes, setPacientes] = useState([]);
-  const [busqueda, setBusqueda] = useState("");
+  const [busqueda, setBusqueda] = useState({
+    tipoIdentificacion: "CC",
+    numeroIdentificacion: "",
+  });
+
   const [mensaje, setMensaje] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
+  };
+
+  const handleBusquedaChange = (e) => {
+    const { name, value } = e.target;
+    setBusqueda((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const limpiarFormulario = () => {
     setForm({
       nombres: "",
-      tipoIdentificacion: "",
-      numeroIdentificacion: "",
+      tipoIdentificacion: busqueda.tipoIdentificacion || "CC",
+      numeroIdentificacion: busqueda.numeroIdentificacion || "",
       ciudad: "",
       direccion: "",
       fechaNacimiento: "",
       sintomas: "",
-      alergico: "",
+      alergico: "No",
       acompanante: "",
-      sexo: "",
+      sexo: "Masculino",
     });
-  };
-
-  const cargarPacientes = async () => {
-    try {
-      const data = await obtenerPacientes();
-      if (data.ok) {
-        setPacientes(data.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    cargarPacientes();
-  }, []);
-
-  const guardarPaciente = async () => {
-    setMensaje("");
-
-    try {
-      const data = await crearPaciente(form);
-
-      if (data.ok) {
-        setMensaje(data.message);
-        limpiarFormulario();
-        cargarPacientes();
-      } else {
-        setMensaje(data.message || "No fue posible guardar el paciente");
-      }
-    } catch (error) {
-      console.error(error);
-      setMensaje("Error al guardar paciente");
-    }
   };
 
   const buscarPaciente = async () => {
     setMensaje("");
 
     try {
-      if (!busqueda.trim()) {
-        cargarPacientes();
+      if (!busqueda.numeroIdentificacion.trim()) {
+        setMensaje("Ingrese un número de documento para buscar");
         return;
       }
 
-      const data = await buscarPacientePorDocumento(busqueda);
+      const data = await buscarPacientePorDocumento(
+        busqueda.tipoIdentificacion,
+        busqueda.numeroIdentificacion
+      );
 
-      if (data.ok) {
-        setPacientes([data.data]);
+      if (data.ok && data.data) {
+        const paciente = data.data;
+
+        setForm({
+          nombres: paciente.nombres || "",
+          tipoIdentificacion: paciente.tipoIdentificacion || "CC",
+          numeroIdentificacion: paciente.numeroIdentificacion || "",
+          ciudad: paciente.ciudad || "",
+          direccion: paciente.direccion || "",
+          fechaNacimiento: paciente.fechaNacimiento || "",
+          sintomas: paciente.sintomas || "",
+          alergico: paciente.alergico || "No",
+          acompanante: paciente.acompanante || "",
+          sexo: paciente.sexo || "Masculino",
+        });
+
+        setMensaje("Paciente encontrado y cargado en el formulario");
       } else {
-        setPacientes([]);
-        setMensaje(data.message || "Paciente no encontrado");
+        setForm({
+          nombres: "",
+          tipoIdentificacion: busqueda.tipoIdentificacion,
+          numeroIdentificacion: busqueda.numeroIdentificacion,
+          ciudad: "",
+          direccion: "",
+          fechaNacimiento: "",
+          sintomas: "",
+          alergico: "No",
+          acompanante: "",
+          sexo: "Masculino",
+        });
+
+        setMensaje("Paciente no encontrado. Puede registrarlo.");
       }
     } catch (error) {
-      console.error(error);
-      setMensaje("Error al buscar paciente");
+      console.error("Error al buscar paciente:", error);
+      setMensaje("Error en búsqueda");
+    }
+  };
+
+  const guardarPaciente = async () => {
+    setMensaje("");
+
+    try {
+      const dataToSend = {
+        ...form,
+        alergico: form.alergico || "No",
+        sexo: form.sexo || "Masculino",
+      };
+
+      const data = await crearPaciente(dataToSend);
+
+      if (data.ok) {
+        setMensaje(data.message || "Paciente registrado correctamente");
+      } else {
+        setMensaje(data.message || "No fue posible guardar el paciente");
+      }
+    } catch (error) {
+      console.error("Error al guardar paciente:", error);
+      setMensaje("Error al guardar paciente");
     }
   };
 
   return (
-    <div>
-      <h1>Módulo de Admisión</h1>
-      <p>Registro y consulta de pacientes</p>
-
-      {mensaje && (
-        <div
-          style={{
-            marginBottom: 16,
-            padding: 12,
-            background: "#eef6ff",
-            border: "1px solid #b7d3f2",
-            borderRadius: 8,
-          }}
-        >
-          {mensaje}
-        </div>
-      )}
-
-      <div
-        style={{
-          display: "grid",
-          gap: 12,
-          maxWidth: 700,
-          marginBottom: 30,
-          background: "#fff",
-          padding: 20,
-          borderRadius: 12,
-          border: "1px solid #ddd",
-        }}
-      >
-        <input
-          name="nombres"
-          placeholder="Nombres"
-          value={form.nombres}
-          onChange={handleChange}
-        />
-
-        <select
-          name="tipoIdentificacion"
-          value={form.tipoIdentificacion}
-          onChange={handleChange}
-        >
-          <option value="">Tipo de identificación</option>
-          <option value="CC">Cédula de ciudadanía</option>
-          <option value="TI">Tarjeta de identidad</option>
-          <option value="CE">Cédula de extranjería</option>
-          <option value="RC">Registro civil</option>
-          <option value="PA">Pasaporte</option>
-        </select>
-
-        <input
-          name="numeroIdentificacion"
-          placeholder="Número de identificación"
-          value={form.numeroIdentificacion}
-          onChange={handleChange}
-        />
-
-        <input
-          name="ciudad"
-          placeholder="Ciudad"
-          value={form.ciudad}
-          onChange={handleChange}
-        />
-
-        <input
-          name="direccion"
-          placeholder="Dirección"
-          value={form.direccion}
-          onChange={handleChange}
-        />
-
-        <input
-          type="date"
-          name="fechaNacimiento"
-          value={form.fechaNacimiento}
-          onChange={handleChange}
-        />
-
-        <textarea
-          name="sintomas"
-          placeholder="Síntomas"
-          value={form.sintomas}
-          onChange={handleChange}
-          rows="3"
-        />
-
-        <div>
-          <label>¿Alérgico?</label>
-          <div style={{ marginTop: 8 }}>
-            <label>
-              <input
-                type="radio"
-                name="alergico"
-                value="Si"
-                checked={form.alergico === "Si"}
-                onChange={handleChange}
-              />
-              {" "}Sí
-            </label>
-
-            <label style={{ marginLeft: 16 }}>
-              <input
-                type="radio"
-                name="alergico"
-                value="No"
-                checked={form.alergico === "No"}
-                onChange={handleChange}
-              />
-              {" "}No
-            </label>
-          </div>
-        </div>
-
-        <input
-          name="acompanante"
-          placeholder="Acompañante"
-          value={form.acompanante}
-          onChange={handleChange}
-        />
-
-        <select name="sexo" value={form.sexo} onChange={handleChange}>
-          <option value="">Sexo</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Femenino">Femenino</option>
-          <option value="Otro">Otro</option>
-        </select>
-
-        <div style={{ display: "flex", gap: 10 }}>
-          <button onClick={guardarPaciente}>Guardar</button>
-          <button onClick={limpiarFormulario}>Limpiar</button>
-        </div>
+    <div className="admision-page">
+      <div className="admision-header">
+        <h1>Módulo de Admisión</h1>
+        <p>Registro, búsqueda y consulta de pacientes</p>
       </div>
 
-      <div
-        style={{
-          background: "#fff",
-          padding: 20,
-          borderRadius: 12,
-          border: "1px solid #ddd",
-        }}
-      >
-        <h2>Buscar paciente</h2>
+      {mensaje && <div className="admision-alert">{mensaje}</div>}
 
-        <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-          <input
-            placeholder="Número de identificación"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
-          <button onClick={buscarPaciente}>Buscar</button>
-          <button onClick={cargarPacientes}>Ver todos</button>
-        </div>
+      <div className="admision-grid">
+        <section className="card">
+          <div className="card-header">
+            <h2>Registrar paciente</h2>
+            <span>Complete la información del paciente</span>
+          </div>
 
-        <h2>Listado de pacientes</h2>
+          <div className="form-grid">
+            <div className="form-group full">
+              <label>Nombres</label>
+              <input
+                name="nombres"
+                placeholder="Ingrese los nombres"
+                value={form.nombres}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <table
-            border="1"
-            cellPadding="8"
-            cellSpacing="0"
-            style={{ width: "100%", background: "#fff" }}
-          >
-            <thead>
-              <tr>
-                <th>Nombres</th>
-                <th>Tipo ID</th>
-                <th>Número ID</th>
-                <th>Ciudad</th>
-                <th>Dirección</th>
-                <th>Fecha Nacimiento</th>
-                <th>Alérgico</th>
-                <th>Acompañante</th>
-                <th>Sexo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pacientes.length > 0 ? (
-                pacientes.map((paciente) => (
-                  <tr key={paciente._id}>
-                    <td>{paciente.nombres}</td>
-                    <td>{paciente.tipoIdentificacion}</td>
-                    <td>{paciente.numeroIdentificacion}</td>
-                    <td>{paciente.ciudad}</td>
-                    <td>{paciente.direccion}</td>
-                    <td>{paciente.fechaNacimiento}</td>
-                    <td>{paciente.alergico}</td>
-                    <td>{paciente.acompanante}</td>
-                    <td>{paciente.sexo}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" style={{ textAlign: "center" }}>
-                    No hay pacientes registrados
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            <div className="form-group">
+              <label>Tipo de identificación</label>
+              <select
+                name="tipoIdentificacion"
+                value={form.tipoIdentificacion}
+                onChange={handleChange}
+              >
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="TI">Tarjeta de identidad</option>
+                <option value="CE">Cédula de extranjería</option>
+                <option value="RC">Registro civil</option>
+                <option value="PA">Pasaporte</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Número de identificación</label>
+              <input
+                name="numeroIdentificacion"
+                placeholder="Ingrese el número"
+                value={form.numeroIdentificacion}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Ciudad</label>
+              <input
+                name="ciudad"
+                placeholder="Ingrese la ciudad"
+                value={form.ciudad}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Dirección</label>
+              <input
+                name="direccion"
+                placeholder="Ingrese la dirección"
+                value={form.direccion}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Fecha de nacimiento</label>
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={form.fechaNacimiento}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Sexo</label>
+              <select name="sexo" value={form.sexo} onChange={handleChange}>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <div className="form-group full">
+              <label>Síntomas</label>
+              <textarea
+                name="sintomas"
+                placeholder="Describa los síntomas"
+                value={form.sintomas}
+                onChange={handleChange}
+                rows="4"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>¿Alérgico?</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="alergico"
+                    value="Si"
+                    checked={form.alergico === "Si"}
+                    onChange={handleChange}
+                  />
+                  Sí
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="alergico"
+                    value="No"
+                    checked={form.alergico === "No"}
+                    onChange={handleChange}
+                  />
+                  No
+                </label>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Acompañante</label>
+              <input
+                name="acompanante"
+                placeholder="Nombre del acompañante"
+                value={form.acompanante}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="actions">
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={guardarPaciente}
+            >
+              Guardar paciente
+            </button>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={limpiarFormulario}
+            >
+              Limpiar
+            </button>
+          </div>
+        </section>
+
+        <section className="card">
+          <div className="card-header">
+            <h2>Búsqueda rápida</h2>
+            <span>Busque por tipo y número de identificación</span>
+          </div>
+
+          <div className="search-box">
+            <select
+              name="tipoIdentificacion"
+              value={busqueda.tipoIdentificacion}
+              onChange={handleBusquedaChange}
+            >
+              <option value="CC">CC</option>
+              <option value="TI">TI</option>
+              <option value="CE">CE</option>
+              <option value="RC">RC</option>
+              <option value="PA">PA</option>
+            </select>
+
+            <input
+              name="numeroIdentificacion"
+              placeholder="Número de identificación"
+              value={busqueda.numeroIdentificacion}
+              onChange={handleBusquedaChange}
+            />
+
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={buscarPaciente}
+            >
+              Buscar
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

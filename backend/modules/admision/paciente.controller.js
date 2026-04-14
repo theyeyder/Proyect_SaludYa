@@ -30,7 +30,10 @@ async function crearPaciente(req, res) {
       });
     }
 
-    const existe = await service.buscarPacientePorDocumento(numeroIdentificacion);
+    const existe = await service.buscarPacientePorDocumento(
+      tipoIdentificacion,
+      numeroIdentificacion
+    );
 
     if (existe) {
       return res.status(400).json({
@@ -42,13 +45,13 @@ async function crearPaciente(req, res) {
     const paciente = await service.crearPaciente({
       nombres,
       tipoIdentificacion,
-      numeroIdentificacion,
+      numeroIdentificacion: String(numeroIdentificacion).trim(),
       ciudad,
       direccion,
       fechaNacimiento,
-      sintomas,
-      alergico,
-      acompanante,
+      sintomas: sintomas || "",
+      alergico: alergico || "No",
+      acompanante: acompanante || "",
       sexo,
     });
 
@@ -58,6 +61,15 @@ async function crearPaciente(req, res) {
       data: paciente,
     });
   } catch (error) {
+    console.error("ERROR REAL AL REGISTRAR PACIENTE:", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        ok: false,
+        message: "Ya existe un paciente con ese número de identificación",
+      });
+    }
+
     return res.status(500).json({
       ok: false,
       message: "Error al registrar paciente",
@@ -75,6 +87,8 @@ async function obtenerPacientes(req, res) {
       data: pacientes,
     });
   } catch (error) {
+    console.error("ERROR AL OBTENER PACIENTES:", error);
+
     return res.status(500).json({
       ok: false,
       message: "Error al obtener pacientes",
@@ -85,8 +99,11 @@ async function obtenerPacientes(req, res) {
 
 async function buscarPacientePorDocumento(req, res) {
   try {
+    const { tipoIdentificacion, numeroIdentificacion } = req.params;
+
     const paciente = await service.buscarPacientePorDocumento(
-      req.params.numeroIdentificacion
+      tipoIdentificacion,
+      numeroIdentificacion
     );
 
     if (!paciente) {
@@ -101,6 +118,8 @@ async function buscarPacientePorDocumento(req, res) {
       data: paciente,
     });
   } catch (error) {
+    console.error("ERROR AL BUSCAR PACIENTE:", error);
+
     return res.status(500).json({
       ok: false,
       message: "Error al buscar paciente",
