@@ -1,0 +1,98 @@
+/* ===== HEADER GENERAL ===== */
+.header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #2471af00;
+  padding: px px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* ===== IZQUIERDA ===== */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-box {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 6px 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.logo-box img {
+  height: 55px;
+  object-fit: contain;
+}
+
+/* ===== TITULOS ===== */
+.header-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #153b50;
+}
+
+.app-subtitle {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ===== DERECHA ===== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ===== TARJETA USUARIO ===== */
+.user-card {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 8px 14px;
+  min-width: 220px;
+  text-align: right;
+}
+
+.user-name {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* ===== BOTÓN ===== */
+.logout-btn {
+  background: linear-gradient(135deg, #059eeb, #059eeb);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 6px 14px rgba(21, 59, 80, 0.18);
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}

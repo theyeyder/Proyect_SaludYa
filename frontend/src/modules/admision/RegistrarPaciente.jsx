@@ -22,6 +22,7 @@ export default function RegistrarPaciente() {
     tipoIdentificacion: "CC",
     numeroIdentificacion: "",
   });
+ 
 
   const [mensaje, setMensaje] = useState("");
 
@@ -135,10 +136,10 @@ export default function RegistrarPaciente() {
   return (
     <div className="admision-page">
       <div className="admision-header">
-        <h1>Módulo de Admisión</h1>
-        <p>Registro, búsqueda y consulta de pacientes</p>
+        
       </div>
 
+    
       {mensaje && <div className="admision-alert">{mensaje}</div>}
 
       <div className="admision-grid">

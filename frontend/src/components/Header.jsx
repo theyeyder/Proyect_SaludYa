@@ -1,3 +1,5 @@
+import "./header.css";
+
 export default function Header() {
   const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
 
@@ -8,32 +10,37 @@ export default function Header() {
   };
 
   return (
-    <header
-      style={{
-        background: "#fff",
-        borderBottom: "1px solid #ddd",
-        padding: "12px 20px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <strong>SaludYa</strong>
+    <header className="header">
+      {/* IZQUIERDA */}
+      <div className="header-left">
+        <div className="logo-box">
+          <img src="/img/Logo.png" />
+        </div>
 
-      <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontWeight: "bold" }}>
+        <div className="header-title">
+         
+          {/* 
+          <span className="app-subtitle">
+            Sistema clínico y administrativo
+          </span> */}
+        </div>
+      </div>
+
+      {/* DERECHA */}
+      <div className="header-right">
+        <div className="user-card">
+          <div className="user-name">
             {usuario
               ? `${usuario.titulo} ${usuario.nombre} ${usuario.apellido}`
               : "Sin sesión"}
           </div>
-          <div style={{ fontSize: 13, color: "#666" }}>
-            {usuario?.nivelAcceso || ""}
-          </div>
+          <div className="user-role">{usuario?.nivelAcceso || ""}</div>
         </div>
 
         {usuario && (
-          <button onClick={cerrarSesion}>Cerrar sesión</button>
+          <button className="logout-btn" onClick={cerrarSesion}>
+            Cerrar sesión
+          </button>
         )}
       </div>
     </header>

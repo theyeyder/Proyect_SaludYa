@@ -191,3 +191,17 @@
     flex-direction: column;
   }
 }
+/* ===== FONDO GLOBAL ===== */
+body {
+  margin: 0;
+  padding: 0;
+  background: url("/img/fondo-saludya.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Capa blanca suave encima */
+.app-overlay {
+  min-height: 100vh;
+  background: rgba(255, 255, 255, 0.88);
+}
+
