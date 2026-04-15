@@ -1,75 +1,113 @@
-import { Link } from "react-router-dom";
-
-const linkStyle = {
-  display: "block",
-  padding: "10px 12px",
-  color: "#fff",
-  background: "rgba(255,255,255,0.08)",
-  borderRadius: 8,
-  marginBottom: 8,
-};
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 export default function Sidebar() {
   const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
   const rol = usuario?.nivelAcceso;
+  const location = useLocation();
+
+  const [collapsed, setCollapsed] = useState(false);
+  const [openMenu, setOpenMenu] = useState("");
 
   const puedeVer = {
     configuracion: rol === "Administrador",
     admision: rol === "Administrador" || rol === "Admisión",
-    citas: rol === "Administrador" || rol === "Admisión" || rol === "Médico",
+    citas: true,
     historiaClinica: rol === "Administrador" || rol === "Médico",
-    facturacion: rol === "Administrador" || rol === "Facturación",
+    facturacion: true,
+    documentos: true,
   };
 
+  const toggleMenu = (menuName) => {
+    setOpenMenu((prev) => (prev === menuName ? "" : menuName));
+  };
+
+  const isActive = (path) => location.pathname === path;
+
+  const icon = (name) => (
+    <img src={`public/img/icon/${name}.png`} alt={name} />
+  );
+
   return (
-    <aside
-      style={{
-        width: 260,
-        background: "#0f3d56",
-        color: "#fff",
-        padding: 20,
-        minHeight: "100vh",
-      }}
-    >
-      <h2 style={{ marginTop: 0 }}>SaludYa</h2>
+    <aside className={`sidebar-pro ${collapsed ? "collapsed" : ""}`}>
+      
+      <div className="sidebar-top">
+        <button
+          className="sidebar-toggle"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          ☰
+        </button>
+      </div>
 
-      <Link style={linkStyle} to="/">
-        Inicio
-      </Link>
+      <nav className="sidebar-nav">
 
-      {puedeVer.configuracion && (
-        <Link style={linkStyle} to="/configuracion">
-          Configuración
+        <Link className={`sidebar-link ${isActive("/") ? "active" : ""}`} to="/">
+          <span className="sidebar-icon">{icon("home")}</span>
+          {!collapsed && <span>Inicio</span>}
         </Link>
-      )}
 
-      {puedeVer.admision && (
-        <Link style={linkStyle} to="/admision">
-          Admisión
-        </Link>
-      )}
+        {puedeVer.configuracion && (
+          <Link className="sidebar-link" to="/configuracion">
+            <span className="sidebar-icon">{icon("configuracion")}</span>
+            {!collapsed && <span>Configuración</span>}
+          </Link>
+        )}
 
-      {puedeVer.citas && (
-        <Link style={linkStyle} to="/citas">
-          Citas
-        </Link>
-      )}
+        {puedeVer.admision && (
+          <Link className="sidebar-link" to="/admision">
+            <span className="sidebar-icon">{icon("admision")}</span>
+            {!collapsed && <span>Admisión</span>}
+          </Link>
+        )}
 
-      {puedeVer.historiaClinica && (
-        <Link style={linkStyle} to="/historia-clinica">
-          Historia Clínica
-        </Link>
-      )}
+        {puedeVer.citas && (
+          <Link className="sidebar-link" to="/citas">
+            <span className="sidebar-icon">{icon("citas")}</span>
+            {!collapsed && <span>Citas</span>}
+          </Link>
+        )}
 
-      {puedeVer.facturacion && (
-        <Link style={linkStyle} to="/facturacion">
-          Facturación
-        </Link>
-      )}
+        {puedeVer.historiaClinica && (
+          <div className="sidebar-group">
+            <button
+              className="sidebar-link sidebar-button"
+              onClick={() => toggleMenu("historia")}
+            >
+              <span className="sidebar-icon">{icon("historia")}</span>
+              {!collapsed && <span>Historia Clínica</span>}
+            </button>
 
-      <Link style={linkStyle} to="/consulta-documentos">
-        Consulta Documentos
-      </Link>
+            {!collapsed && openMenu === "historia" && (
+              <div className="sidebar-submenu">
+                <Link to="/historia-clinica" className="sidebar-sublink">
+                  Historia
+                </Link>
+                <Link to="/ordenes/formula-medica" className="sidebar-sublink">
+                  Fórmula médica
+                </Link>
+                <Link to="/ordenes/incapacidades" className="sidebar-sublink">
+                  Incapacidades
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+
+        {puedeVer.facturacion && (
+          <Link className="sidebar-link" to="/facturacion">
+            <span className="sidebar-icon">{icon("facturacion")}</span>
+            {!collapsed && <span>Facturación</span>}
+          </Link>
+        )}
+
+        {puedeVer.documentos && (
+          <Link className="sidebar-link" to="/consulta-documentos">
+            <span className="sidebar-icon">{icon("documentos")}</span>
+            {!collapsed && <span>Documentos</span>}
+          </Link>
+        )}
+      </nav>
     </aside>
   );
 }

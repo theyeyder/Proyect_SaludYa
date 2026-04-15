@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 
+
 export default function ProtectedRoute({ children, allowedRoles = [] }) {
   const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
 
