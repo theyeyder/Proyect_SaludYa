@@ -3,6 +3,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 
 import Login from "../modules/auth/Login";
+import Home from "../modules/home/home";
 import RegistrarPaciente from "../modules/admision/RegistrarPaciente";
 import Configuracion from "../modules/configuracion/Configuracion";
 import AgendarCita from "../modules/citas/AgendarCita";
@@ -13,17 +14,6 @@ import Procedimientos from "../modules/ordenes/Procedimientos";
 import Laboratorios from "../modules/ordenes/Laboratorios";
 import GenerarFactura from "../modules/facturacion/GenerarFactura";
 import ConsultaDocumentos from "../external/consultaDocumentos/ConsultaDocumentos";
-
-function Home() {
-  return (
-    <ProtectedRoute allowedRoles={["Administrador", "Admisión", "Médico", "Facturación", "Facturador"]}>
-      <MainLayout>
-        <h1>Bienvenido a SaludYa</h1>
-        <p>Sistema base para la gestión clínica y administrativa.</p>
-      </MainLayout>
-    </ProtectedRoute>
-  );
-}
 
 const wrap = (Component, allowedRoles) => (
   <ProtectedRoute allowedRoles={allowedRoles}>
@@ -37,8 +27,18 @@ export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/"
+          element={wrap(Home, [
+            "Administrador",
+            "Admisión",
+            "Médico",
+            "Facturación",
+            "Facturador",
+          ])}
+        />
 
         <Route
           path="/configuracion"
@@ -52,7 +52,13 @@ export default function AppRoutes() {
 
         <Route
           path="/citas"
-          element={wrap(AgendarCita, ["Administrador", "Admisión", "Médico", "Facturador", "Facturación"])}
+          element={wrap(AgendarCita, [
+            "Administrador",
+            "Admisión",
+            "Médico",
+            "Facturador",
+            "Facturación",
+          ])}
         />
 
         <Route
@@ -82,7 +88,12 @@ export default function AppRoutes() {
 
         <Route
           path="/facturacion"
-          element={wrap(GenerarFactura, ["Administrador", "Facturador", "Facturación", "Admisión"])}
+          element={wrap(GenerarFactura, [
+            "Administrador",
+            "Facturador",
+            "Facturación",
+            "Admisión",
+          ])}
         />
 
         <Route path="/consulta-documentos" element={<ConsultaDocumentos />} />
