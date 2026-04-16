@@ -56,11 +56,6 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="home-header">
-        <h1>Módulos del sistema</h1>
-        <p>Seleccione una opción para continuar</p>
-      </div>
-        
       <div className="grid">
         {modulosPermitidos.map((key) => {
           const modulo = modulos[key];

@@ -1,178 +1,190 @@
-/*
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login } from "../../api/authApi";
 import "./Login.css";
 
 export default function Login() {
+  // Estados
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
 
   const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false);
+  const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [recordar, setRecordar] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const iniciarSesion = async (e) => {
-    e.preventDefault();
-    setMensaje("");
-
-    try {
-      const data = await login(form);
-      console.log("Respuesta login:", data);
-
-      if (data?.ok || data?.usuario) {
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
-
-        if (data.usuario) {
-          localStorage.setItem("usuario", JSON.stringify(data.usuario));
-        } else {
-          localStorage.setItem(
-            "usuario",
-            JSON.stringify({
-              titulo: "Admin.",
-              nombre: "Usuario",
-              apellido: "Sistema",
-              nivelAcceso: "Administrador",
-            })
-          );
-        }
-
-        window.location.href = "/";
-      } else {
-        setMensaje(data?.message || "Credenciales inválidas");
-      }
-    } catch (error) {
-      console.error("Error login:", error);
-      setMensaje("Error al iniciar sesión");
+  // Cargar usuario recordado
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("rememberedUsername");
+    if (savedUsername) {
+      setForm((prev) => ({ ...prev, username: savedUsername }));
+      setRecordar(true);
     }
-  };
+  }, []);
 
-  return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-header">
-          <h1>SaludYa</h1>
-          <p>Ingreso al sistema clínico</p>
-        </div>
-
-        <form className="login-form" onSubmit={iniciarSesion}>
-          <label>Usuario</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Ingrese su usuario"
-            value={form.username}
-            onChange={handleChange}
-          />
-
-          <label>Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Ingrese su contraseña"
-            value={form.password}
-            onChange={handleChange}
-          />
-
-          <button type="submit">Iniciar sesión</button>
-
-          {mensaje && <p className="login-error">{mensaje}</p>}
-        </form>
-
-        <div className="login-footer">
-          <small>
-            Los pacientes consultan sus documentos desde el portal externo por
-            tipo y número de identificación.
-          </small>
-        </div>
-      </div>
-    </div>
-  );
-}
-*/
-import { useState } from "react";
-import { login } from "../../api/authApi";
-import "./Login.css";
-
-export default function Login() {
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-  });
-
-  const [mensaje, setMensaje] = useState("");
-
+  // Manejar cambios
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (mensaje) setMensaje("");
   };
 
+  // Validación
+  const validarFormulario = () => {
+    if (!form.username.trim()) {
+      setMensaje("Por favor ingrese el usuario");
+      return false;
+    }
+    if (!form.password.trim()) {
+      setMensaje("Por favor ingrese la contraseña");
+      return false;
+    }
+    return true;
+  };
+
+  // Login
   const iniciarSesion = async (e) => {
     e.preventDefault();
+
+    if (!validarFormulario()) return;
+
+    setCargando(true);
     setMensaje("");
 
     try {
       const data = await login(form);
-      console.log("Respuesta login:", data);
 
-      if (data.ok && data.usuario) {
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
-
+      if (data.ok) {
+        localStorage.setItem("token", data.token);
         localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-        window.location.href = "/";
+        if (recordar) {
+          localStorage.setItem("rememberedUsername", form.username);
+        } else {
+          localStorage.removeItem("rememberedUsername");
+        }
+
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
       } else {
-        setMensaje(data.message || "Credenciales inválidas");
+        setMensaje(data.mensaje || "Credenciales incorrectas");
       }
     } catch (error) {
-      console.error("Error login:", error);
-      setMensaje("Error al iniciar sesión");
+      setMensaje("Error al conectar con el servidor");
+      console.error(error);
+    } finally {
+      setCargando(false);
     }
   };
 
   return (
     <div className="login-page">
-      <div className="login-card">
-        <div className="login-header">
-          <h1>SaludYa</h1>
-          <p>Ingreso al sistema clínico</p>
+      <div className="login-overlay">
+        <div className="login-card">
+          {/* LOADING */}
+          {cargando && (
+            <div className="login-loading">
+              <div className="spinner"></div>
+            </div>
+          )}
+
+          {/* LOGO */}
+          <div className="login-logo-container">
+            <img src="/img/Logo.png" alt="SaludYa" />
+
+            <p>Ingrese sus credenciales</p>
+          </div>
+
+          {/* FORM */}
+          <form onSubmit={iniciarSesion} className="login-form">
+            {/* USUARIO */}
+            <div className="login-field">
+              <label>
+                <span className="field-icon">
+                  <img src="/img/icon/user.png" alt="usuario" />
+                </span>
+                Usuario
+              </label>
+
+              <input
+                type="text"
+                name="username"
+                placeholder="Ingresar usuario"
+                value={form.username}
+                onChange={handleChange}
+                disabled={cargando}
+              />
+            </div>
+
+            {/* CONTRASEÑA */}
+            <div className="login-field">
+              <label>
+                <span className="field-icon">
+                  <img src="/img/icon/lock.png" alt="contraseña" />
+                </span>
+                Contraseña
+              </label>
+
+              <div className="password-wrapper">
+                <input
+                  type={mostrarPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Escribir Contraseña"
+                  value={form.password}
+                  onChange={handleChange}
+                  disabled={cargando}
+                />
+
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setMostrarPassword(!mostrarPassword)}
+                >
+                  <img
+                    src={
+                      mostrarPassword
+                        ? "/img/icon/eye-off.png"
+                        : "/img/icon/eye.png"
+                    }
+                    alt="ver contraseña"
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* RECORDAR USUARIO */}
+            <div className="login-options">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={recordar}
+                  onChange={(e) => setRecordar(e.target.checked)}
+                  disabled={cargando}
+                />
+                <span>Recordar usuario</span>
+              </label>
+            </div>
+
+            {/* ERROR */}
+            {mensaje && (
+              <div className="login-error">
+                <span className="error-icon">⚠️</span>
+                {mensaje}
+              </div>
+            )}
+
+            {/* BOTÓN */}
+            <button className="login-button" type="submit" disabled={cargando}>
+              {cargando ? "Verificando..." : "Ingresar"}
+            </button>
+          </form>
         </div>
-
-        <form className="login-form" onSubmit={iniciarSesion}>
-          <label>Usuario</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Ingrese su usuario"
-            value={form.username}
-            onChange={handleChange}
-          />
-
-          <label>Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Ingrese su contraseña"
-            value={form.password}
-            onChange={handleChange}
-          />
-
-          <button type="submit">Iniciar sesión</button>
-
-          {mensaje && <p className="login-error">{mensaje}</p>}
-        </form>
       </div>
     </div>
   );
