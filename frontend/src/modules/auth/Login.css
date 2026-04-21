@@ -86,7 +86,7 @@
    ============================================ */
 .login-logo-container {
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 50px;
 }
 
 .login-logo-container img {
@@ -98,7 +98,7 @@
 .login-logo-container h2 {
   color: var(--text-dark);
   font-size: 22px;
-  margin: 0 0 6px;
+  margin: 0 0 6px;  
   font-weight: 700;
 }
 
