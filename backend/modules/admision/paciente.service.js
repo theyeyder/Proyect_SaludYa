@@ -1,22 +1,25 @@
 const Paciente = require("./paciente.model");
 
-async function crearPaciente(data) {
-  return await Paciente.create(data);
-}
+const crearPaciente = (data) => Paciente.create(data);
 
-async function obtenerPacientes() {
-  return await Paciente.find().sort({ createdAt: -1 });
-}
+const obtenerPacientes = () =>
+  Paciente.find().sort({ createdAt: -1 });
 
-async function buscarPacientePorDocumento(tipoIdentificacion, numeroIdentificacion) {
-  return await Paciente.findOne({
-    tipoIdentificacion: String(tipoIdentificacion).trim(),
-    numeroIdentificacion: String(numeroIdentificacion).trim(),
+const buscarPacientePorDocumento = (tipo, numero) =>
+  Paciente.findOne({
+    tipoIdentificacion: String(tipo).trim(),
+    numeroIdentificacion: String(numero).trim(),
   });
-}
+
+const actualizarPaciente = (id, data) =>
+  Paciente.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
 
 module.exports = {
   crearPaciente,
   obtenerPacientes,
   buscarPacientePorDocumento,
+  actualizarPaciente,
 };

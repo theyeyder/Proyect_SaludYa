@@ -1,16 +1,19 @@
 const router = require("express").Router();
 const controller = require("./paciente.controller");
 
-// Crear paciente
+// CREAR
 router.post("/", controller.crearPaciente);
 
-// Obtener todos los pacientes
+// 🔥 LISTAR TODOS (ESTO TE FALTABA)
 router.get("/", controller.obtenerPacientes);
 
-// Buscar paciente por tipo y número de identificación
+// BUSCAR POR DOCUMENTO
 router.get(
   "/documento/:tipoIdentificacion/:numeroIdentificacion",
   controller.buscarPacientePorDocumento
 );
+
+// ACTUALIZAR
+router.put("/:id", controller.actualizarPaciente);
 
 module.exports = router;
