@@ -18,7 +18,6 @@ export default function Sidebar() {
     facturacion: true,
     documentos: true,
   };
-
   const toggleMenu = (menuName) => {
     setOpenMenu((prev) => (prev === menuName ? "" : menuName));
   };
