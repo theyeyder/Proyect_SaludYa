@@ -16,6 +16,12 @@ const initialForm = {
   estado: true,
 };
 
+const initialPasswordForm = {
+  passwordAnterior: "",
+  nuevaPassword: "",
+  repetirPassword: "",
+};
+
 const IconImg = ({ name, alt }) => (
   <img
     src={`/img/icon/${name}.png`}
@@ -29,8 +35,15 @@ export default function Configuracion() {
   const [form, setForm] = useState(initialForm);
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("info");
+
   const [showModal, setShowModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState(initialPasswordForm);
   const [filtro, setFiltro] = useState("");
+
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [modoEditarDatos, setModoEditarDatos] = useState(false);
 
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -50,9 +63,7 @@ export default function Configuracion() {
       });
     };
 
-    const detenerArrastre = () => {
-      setDragging(false);
-    };
+    const detenerArrastre = () => setDragging(false);
 
     window.addEventListener("mousemove", moverModal);
     window.addEventListener("mouseup", detenerArrastre);
@@ -84,17 +95,38 @@ export default function Configuracion() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const limpiarFormulario = () => {
     setForm(initialForm);
     setMensaje("");
+    setUsuarioSeleccionado(null);
+    setModoEdicion(false);
+    setModoEditarDatos(false);
   };
 
   const abrirModal = () => {
     setModalPosition({ x: 0, y: 0 });
     setShowModal(true);
+  };
+
+  const abrirPasswordModal = () => {
+    setPasswordForm(initialPasswordForm);
+    setShowPasswordModal(true);
   };
 
   const iniciarArrastre = (e) => {
@@ -105,6 +137,29 @@ export default function Configuracion() {
       x: e.clientX - modalPosition.x,
       y: e.clientY - modalPosition.y,
     });
+  };
+
+  const seleccionarUsuario = (usuario) => {
+    setUsuarioSeleccionado(usuario);
+    setModoEdicion(true);
+    setModoEditarDatos(false);
+
+    setForm({
+      username: usuario.username || "",
+      correo: usuario.correo || "",
+      telefono: usuario.telefono || "",
+      nombre: usuario.nombre || "",
+      apellido: usuario.apellido || "",
+      password: "",
+      repetirPassword: "",
+      sexo: usuario.sexo || "M",
+      nivelAcceso: usuario.nivelAcceso || "Admisión",
+      estado: usuario.estado ?? true,
+    });
+
+    setShowModal(false);
+    setMensaje("Usuario cargado correctamente");
+    setTipoMensaje("info");
   };
 
   const crearUsuario = async () => {
@@ -136,6 +191,54 @@ export default function Configuracion() {
     }
   };
 
+  const guardarCambioPassword = async () => {
+    if (!usuarioSeleccionado?._id) return;
+
+    if (
+      !passwordForm.passwordAnterior.trim() ||
+      !passwordForm.nuevaPassword.trim() ||
+      !passwordForm.repetirPassword.trim()
+    ) {
+      setMensaje("Complete todos los campos de contraseña");
+      setTipoMensaje("error");
+      return;
+    }
+
+    if (passwordForm.nuevaPassword !== passwordForm.repetirPassword) {
+      setMensaje("La nueva contraseña no coincide");
+      setTipoMensaje("error");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/${usuarioSeleccionado._id}/password`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          passwordAnterior: passwordForm.passwordAnterior,
+          password: passwordForm.nuevaPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.message || "No fue posible cambiar la contraseña");
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje("Contraseña actualizada correctamente");
+      setTipoMensaje("success");
+      setPasswordForm(initialPasswordForm);
+      setShowPasswordModal(false);
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error al cambiar contraseña");
+      setTipoMensaje("error");
+    }
+  };
+
   const cambiarEstado = async (id) => {
     try {
       const res = await fetch(`${API_URL}/${id}/estado`, {
@@ -152,38 +255,19 @@ export default function Configuracion() {
 
       setMensaje(data.message);
       setTipoMensaje("success");
+
+      if (usuarioSeleccionado?._id === id) {
+        setUsuarioSeleccionado(data.data);
+        setForm((prev) => ({
+          ...prev,
+          estado: data.data.estado,
+        }));
+      }
+
       obtenerUsuarios();
     } catch (error) {
       console.error(error);
       setMensaje("Error al cambiar estado");
-      setTipoMensaje("error");
-    }
-  };
-
-  const cambiarPassword = async (id) => {
-    const nueva = prompt("Ingrese la nueva contraseña:");
-    if (!nueva || !nueva.trim()) return;
-
-    try {
-      const res = await fetch(`${API_URL}/${id}/password`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: nueva }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setMensaje(data.message || "No fue posible cambiar la contraseña");
-        setTipoMensaje("error");
-        return;
-      }
-
-      setMensaje("Contraseña actualizada correctamente");
-      setTipoMensaje("success");
-    } catch (error) {
-      console.error(error);
-      setMensaje("Error al cambiar contraseña");
       setTipoMensaje("error");
     }
   };
@@ -195,10 +279,6 @@ export default function Configuracion() {
 
   return (
     <div className="configuracion-page">
-      <div className="configuracion-header">
-        
-      </div>
-
       {mensaje && (
         <div className={`config-alert config-alert--${tipoMensaje}`}>
           {mensaje}
@@ -208,12 +288,48 @@ export default function Configuracion() {
       <section className="config-card usuario-card">
         <div className="usuario-title-bar">
           <span className="usuario-title-icon">
-            <IconImg name="Crear Usuarios" alt="Usuario" />
+            <IconImg name="usuario" alt="Usuario" />
           </span>
 
-          <h2>Crear Usuarios</h2>
+          <h2>{modoEdicion ? "Usuario seleccionado" : "Crear Usuarios"}</h2>
 
           <div className="usuario-title-actions">
+            {modoEdicion && usuarioSeleccionado && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setModoEditarDatos(true)}
+                  title="Editar usuario"
+                >
+                  <IconImg name="editar" alt="Editar" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={abrirPasswordModal}
+                  title="Cambiar contraseña"
+                >
+                  <IconImg name="password" alt="Cambiar contraseña" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => cambiarEstado(usuarioSeleccionado._id)}
+                  title={
+                    usuarioSeleccionado.estado
+                      ? "Bloquear usuario"
+                      : "Desbloquear usuario"
+                  }
+                >
+                  {usuarioSeleccionado.estado ? (
+                    <IconImg name="bloquear" alt="Bloquear" />
+                  ) : (
+                    <IconImg name="desbloquear" alt="Desbloquear" />
+                  )}
+                </button>
+              </>
+            )}
+
             <button type="button" onClick={limpiarFormulario} title="Nuevo">
               <IconImg name="nuevo" alt="Nuevo" />
             </button>
@@ -235,6 +351,7 @@ export default function Configuracion() {
             value={form.correo}
             onChange={handleChange}
             placeholder="correo@saludya.com"
+            disabled={modoEdicion && !modoEditarDatos}
           />
         </div>
 
@@ -245,6 +362,7 @@ export default function Configuracion() {
             value={form.nombre}
             onChange={handleChange}
             placeholder="Nombres"
+            disabled={modoEdicion && !modoEditarDatos}
           />
         </div>
 
@@ -255,6 +373,7 @@ export default function Configuracion() {
             value={form.apellido}
             onChange={handleChange}
             placeholder="Apellidos"
+            disabled={modoEdicion && !modoEditarDatos}
           />
         </div>
 
@@ -265,6 +384,7 @@ export default function Configuracion() {
             value={form.telefono}
             onChange={handleChange}
             placeholder="Teléfono"
+            disabled={modoEdicion && !modoEditarDatos}
           />
         </div>
 
@@ -275,6 +395,7 @@ export default function Configuracion() {
             value={form.username}
             onChange={handleChange}
             placeholder="Usuario"
+            disabled={modoEdicion && !modoEditarDatos}
           />
         </div>
 
@@ -285,7 +406,12 @@ export default function Configuracion() {
             name="password"
             value={form.password}
             onChange={handleChange}
-            placeholder="Contraseña"
+            placeholder={
+              modoEdicion
+                ? "Se cambia desde el botón de contraseña"
+                : "Contraseña"
+            }
+            disabled={modoEdicion}
           />
         </div>
 
@@ -296,13 +422,23 @@ export default function Configuracion() {
             name="repetirPassword"
             value={form.repetirPassword}
             onChange={handleChange}
-            placeholder="Repetir contraseña"
+            placeholder={
+              modoEdicion
+                ? "Se cambia desde el botón de contraseña"
+                : "Repetir contraseña"
+            }
+            disabled={modoEdicion}
           />
         </div>
 
         <div className="usuario-form-line">
           <label>Sexo</label>
-          <select name="sexo" value={form.sexo} onChange={handleChange}>
+          <select
+            name="sexo"
+            value={form.sexo}
+            onChange={handleChange}
+            disabled={modoEdicion && !modoEditarDatos}
+          >
             <option value="M">Masculino</option>
             <option value="F">Femenino</option>
           </select>
@@ -314,6 +450,7 @@ export default function Configuracion() {
             name="nivelAcceso"
             value={form.nivelAcceso}
             onChange={handleChange}
+            disabled={modoEdicion && !modoEditarDatos}
           >
             <option value="Administrador">Administrador</option>
             <option value="Admisión">Admisión</option>
@@ -332,6 +469,7 @@ export default function Configuracion() {
                 estado: e.target.value === "true",
               }))
             }
+            disabled={modoEdicion}
           >
             <option value="true">Activa</option>
             <option value="false">Desactivada</option>
@@ -368,7 +506,8 @@ export default function Configuracion() {
               <select>
                 <option>Nombre</option>
                 <option>Usuario</option>
-                <option>Correo</option>
+                <option>Username</option>
+               
               </select>
 
               <input
@@ -392,14 +531,18 @@ export default function Configuracion() {
                     <th>Correo</th>
                     <th>Rol</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th>Seleccionar</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {usuariosFiltrados.length > 0 ? (
                     usuariosFiltrados.map((u) => (
-                      <tr key={u._id}>
+                      <tr
+                        key={u._id}
+                        className="modal-row-select"
+                        onClick={() => seleccionarUsuario(u)}
+                      >
                         <td>{u.username}</td>
                         <td>
                           {u.nombre} {u.apellido}
@@ -407,23 +550,7 @@ export default function Configuracion() {
                         <td>{u.correo || "-"}</td>
                         <td>{u.nivelAcceso}</td>
                         <td>{u.estado ? "Activo" : "Bloqueado"}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="config-btn config-btn--small"
-                            onClick={() => cambiarEstado(u._id)}
-                          >
-                            {u.estado ? "Bloquear" : "Activar"}
-                          </button>
-
-                          <button
-                            type="button"
-                            className="config-btn config-btn--small config-btn--secondary"
-                            onClick={() => cambiarPassword(u._id)}
-                          >
-                            Password
-                          </button>
-                        </td>
+                        <td>Seleccionar</td>
                       </tr>
                     ))
                   ) : (
@@ -433,6 +560,73 @@ export default function Configuracion() {
                   )}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPasswordModal && (
+        <div className="password-modal-overlay">
+          <div className="password-modal">
+            <div className="password-modal-header">
+              <h3>Cambiar contraseña</h3>
+
+              <button
+                type="button"
+                className="close-btn"
+                onClick={() => setShowPasswordModal(false)}
+                title="Cerrar"
+              >
+                <IconImg name="cerrar" alt="Cerrar" />
+              </button>
+            </div>
+
+            <div className="password-modal-body">
+              <div className="usuario-form-line">
+                <label>Contraseña antigua</label>
+                <input
+                  type="password"
+                  name="passwordAnterior"
+                  value={passwordForm.passwordAnterior}
+                  onChange={handlePasswordChange}
+                  placeholder="Contraseña antigua"
+                />
+              </div>
+
+              <div className="usuario-form-line">
+                <label>Nueva contraseña</label>
+                <input
+                  type="password"
+                  name="nuevaPassword"
+                  value={passwordForm.nuevaPassword}
+                  onChange={handlePasswordChange}
+                  placeholder="Nueva contraseña"
+                />
+              </div>
+
+              <div className="usuario-form-line">
+                <label>Repetir contraseña</label>
+                <input
+                  type="password"
+                  name="repetirPassword"
+                  value={passwordForm.repetirPassword}
+                  onChange={handlePasswordChange}
+                  placeholder="Repetir contraseña"
+                />
+              </div>
+            </div>
+
+            <div className="password-modal-actions">
+              <button
+                type="button"
+                className="usuario-action-icon-btn"
+                onClick={guardarCambioPassword}
+                title="Guardar"
+              >
+                <IconImg name="guardar" alt="Guardar" />
+              </button>
+
+              
             </div>
           </div>
         </div>

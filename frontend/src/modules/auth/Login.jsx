@@ -97,8 +97,9 @@ export default function Login() {
           {/* LOGO */}
           <div className="login-logo-container">
             <img src="/img/Logo.png" alt="SaludYa" />
+            
 
-            <p>Ingrese sus credenciales</p>
+            {/* <p>Ingrese sus credenciales</p> */}
           </div>
 
           {/* FORM */}

@@ -14,6 +14,7 @@
   --transition: all 0.3s ease;
 }
 
+
 /* ============================================
    CONTENEDOR PRINCIPAL
    ============================================ */
@@ -22,6 +23,8 @@
   background: url("/img/fondo-saludya.jpg") no-repeat center center;
   background-size: cover;
 }
+
+
 
 /* ============================================
    OVERLAY
@@ -40,8 +43,8 @@
    ============================================ */
 .login-card {
   width: 100%;
-  max-width: 360px;
-  background: rgb(255, 255, 255);
+  max-width: 350px;
+  background: rgba(8, 177, 233, 0.164);
   border-radius: 20px;
   padding: 28px 24px;
   box-shadow: var(--shadow-lg);
@@ -58,7 +61,7 @@
 .login-loading {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(252, 252, 252, 0.726);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -69,7 +72,7 @@
 .spinner {
   width: 42px;
   height: 42px;
-  border: 4px solid #e0e0e0;
+  border: 4px solid #01e1ff;
   border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -86,13 +89,13 @@
    ============================================ */
 .login-logo-container {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 00px;
 }
 
 .login-logo-container img {
-  width: 130px;
+  width: 200px;
   height: auto;
-  margin-bottom: 14px;
+  margin-bottom: 1px;
 }
 
 .login-logo-container h2 {
