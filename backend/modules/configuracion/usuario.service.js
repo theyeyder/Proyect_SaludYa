@@ -4,6 +4,12 @@ exports.crear = (data) => Usuario.create(data);
 
 exports.listar = () => Usuario.find().sort({ createdAt: -1 });
 
+exports.listarMedicos = () =>
+  Usuario.find({
+    nivelAcceso: { $in: ["Médico", "Medico"] },
+    estado: true,
+  }).sort({ nombre: 1 });
+
 exports.buscarPorUsername = (username) =>
   Usuario.findOne({ username: String(username).trim() });
 

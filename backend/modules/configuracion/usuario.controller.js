@@ -177,3 +177,60 @@ exports.cambiarPassword = async (req, res) => {
     });
   }
 };
+
+exports.resetPassword = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const usuario = await service.buscarPorId(id);
+
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    usuario.password = "123";
+
+    await usuario.save();
+
+    return res.json({
+      ok: true,
+      message:
+        "Contraseña restablecida correctamente",
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      ok: false,
+      message:
+        "Error al restablecer contraseña",
+      error: error.message,
+    });
+
+  }
+};
+
+exports.obtenerMedicos = async (req, res) => {
+  try {
+
+    const usuarios = await service.listarMedicos();
+
+    return res.json({
+      ok: true,
+      data: usuarios,
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      ok: false,
+      message: "Error al obtener médicos",
+      error: error.message,
+    });
+
+  }
+};

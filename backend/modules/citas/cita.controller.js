@@ -72,3 +72,27 @@ exports.reprogramarCita = async (req, res) => {
     });
   }
 };
+
+exports.editarCita = async (req, res) => {
+
+  try {
+
+    const cita = await service.editar(
+      req.params.id,
+      req.body
+    );
+
+    res.json({
+      ok: true,
+      cita,
+    });
+
+  } catch (error) {
+
+    res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+
+  }
+};

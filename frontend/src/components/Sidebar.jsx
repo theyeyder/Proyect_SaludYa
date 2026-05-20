@@ -12,12 +12,31 @@ export default function Sidebar() {
 
   const puedeVer = {
     configuracion: rol === "Administrador",
-    admision: rol === "Administrador" || rol === "Admisión",
-    citas: true,
-    historiaClinica: rol === "Administrador" || rol === "Médico",
-    facturacion: true,
-    documentos: true,
+
+    admision:
+      rol === "Administrador" ||
+      rol === "Admisión" ||
+      rol === "Facturación",
+
+    citas:
+      rol === "Administrador" ||
+      rol === "Admisión",
+
+    historiaClinica:
+      rol === "Administrador" ||
+      rol === "Médico" ||
+      rol === "Facturación",
+
+    facturacion:
+      rol === "Administrador" ||
+      rol === "Facturación",
+
+    documentos:
+      rol === "Administrador" ||
+      rol === "Admisión" ||
+      rol === "Facturación",
   };
+
   const toggleMenu = (menuName) => {
     setOpenMenu((prev) => (prev === menuName ? "" : menuName));
   };
@@ -61,7 +80,11 @@ export default function Sidebar() {
               {!collapsed && (
                 <>
                   <span>Configuración</span>
-                  <span className={`sidebar-arrow ${openMenu === "configuracion" ? "open" : ""}`}>
+                  <span
+                    className={`sidebar-arrow ${
+                      openMenu === "configuracion" ? "open" : ""
+                    }`}
+                  >
                     ▾
                   </span>
                 </>
@@ -70,24 +93,38 @@ export default function Sidebar() {
 
             {!collapsed && openMenu === "configuracion" && (
               <div className="sidebar-submenu">
-                <Link to="/configuracion" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Usuario
+                <Link to="/configuracion/usuarios" className="sidebar-sublink">
+                  <span className="submenu-dot">○</span>
+                  Usuario
                 </Link>
 
-                <Link to="/configuracion" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Procedimientos
+                <Link
+                  to="/configuracion/procedimientos"
+                  className="sidebar-sublink"
+                >
+                  <span className="submenu-dot">○</span>
+                  Procedimientos
                 </Link>
 
-                <Link to="/configuracion" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Consultas
+                <Link to="/configuracion/consultas" className="sidebar-sublink">
+                  <span className="submenu-dot">○</span>
+                  Consultas
                 </Link>
 
-                <Link to="/configuracion" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Laboratorios
+                <Link
+                  to="/configuracion/laboratorios"
+                  className="sidebar-sublink"
+                >
+                  <span className="submenu-dot">○</span>
+                  Laboratorios
                 </Link>
 
-                <Link to="/configuracion" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Medicamentos
+                <Link
+                  to="/configuracion/medicamentos"
+                  className="sidebar-sublink"
+                >
+                  <span className="submenu-dot">○</span>
+                  Medicamentos
                 </Link>
               </div>
             )}
@@ -95,14 +132,20 @@ export default function Sidebar() {
         )}
 
         {puedeVer.admision && (
-          <Link className={`sidebar-link ${isActive("/admision") ? "active" : ""}`} to="/admision">
+          <Link
+            className={`sidebar-link ${isActive("/admision") ? "active" : ""}`}
+            to="/admision"
+          >
             <span className="sidebar-icon">{icon("admision")}</span>
             {!collapsed && <span>Admisión</span>}
           </Link>
         )}
 
         {puedeVer.citas && (
-          <Link className={`sidebar-link ${isActive("/citas") ? "active" : ""}`} to="/citas">
+          <Link
+            className={`sidebar-link ${isActive("/citas") ? "active" : ""}`}
+            to="/citas"
+          >
             <span className="sidebar-icon">{icon("citas")}</span>
             {!collapsed && <span>Citas</span>}
           </Link>
@@ -125,7 +168,11 @@ export default function Sidebar() {
               {!collapsed && (
                 <>
                   <span>Historia Clínica</span>
-                  <span className={`sidebar-arrow ${openMenu === "historia" ? "open" : ""}`}>
+                  <span
+                    className={`sidebar-arrow ${
+                      openMenu === "historia" ? "open" : ""
+                    }`}
+                  >
                     ▾
                   </span>
                 </>
@@ -135,15 +182,28 @@ export default function Sidebar() {
             {!collapsed && openMenu === "historia" && (
               <div className="sidebar-submenu">
                 <Link to="/historia-clinica" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Historia
+                  <span className="submenu-dot">○</span>
+                  Historia
                 </Link>
 
                 <Link to="/ordenes/formula-medica" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Fórmula médica
+                  <span className="submenu-dot">○</span>
+                  Fórmula médica
+                </Link>
+
+                <Link to="/ordenes/procedimientos" className="sidebar-sublink">
+                  <span className="submenu-dot">○</span>
+                  Procedimientos
+                </Link>
+
+                <Link to="/ordenes/laboratorios" className="sidebar-sublink">
+                  <span className="submenu-dot">○</span>
+                  Laboratorios
                 </Link>
 
                 <Link to="/ordenes/incapacidades" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span> Incapacidades
+                  <span className="submenu-dot">○</span>
+                  Incapacidades
                 </Link>
               </div>
             )}
@@ -151,7 +211,12 @@ export default function Sidebar() {
         )}
 
         {puedeVer.facturacion && (
-          <Link className={`sidebar-link ${isActive("/facturacion") ? "active" : ""}`} to="/facturacion">
+          <Link
+            className={`sidebar-link ${
+              isActive("/facturacion") ? "active" : ""
+            }`}
+            to="/facturacion"
+          >
             <span className="sidebar-icon">{icon("facturacion")}</span>
             {!collapsed && <span>Facturación</span>}
           </Link>
@@ -159,7 +224,9 @@ export default function Sidebar() {
 
         {puedeVer.documentos && (
           <Link
-            className={`sidebar-link ${isActive("/consulta-documentos") ? "active" : ""}`}
+            className={`sidebar-link ${
+              isActive("/consulta-documentos") ? "active" : ""
+            }`}
             to="/consulta-documentos"
           >
             <span className="sidebar-icon">{icon("documentos")}</span>

@@ -41,7 +41,7 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/configuracion"
+          path="/configuracion/*"
           element={wrap(Configuracion, ["Administrador"])}
         />
 

@@ -60,3 +60,26 @@ exports.reprogramar = async (id, fecha, hora) => {
     { new: true }
   );
 };
+
+exports.editar = async (id, data) => {
+
+  const existe = await Cita.findOne({
+    _id: { $ne: id },
+    fecha: data.fecha,
+    hora: data.hora,
+    medicoId: data.medicoId,
+    estado: { $ne: "Cancelada" },
+  });
+
+  if (existe) {
+    throw new Error(
+      "Ya existe otra cita en esa fecha y hora"
+    );
+  }
+
+  return Cita.findByIdAndUpdate(
+    id,
+    data,
+    { new: true }
+  );
+};

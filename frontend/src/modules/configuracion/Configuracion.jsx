@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./configuracion.css";
 
 const API_URL = "http://localhost:4000/api/usuarios";
+const API_PROCEDIMIENTOS = "http://localhost:4000/api/procedimientos";
 
 const initialForm = {
   username: "",
@@ -22,6 +24,13 @@ const initialPasswordForm = {
   repetirPassword: "",
 };
 
+const initialProcedimientoForm = {
+  codigo: "",
+  nombre: "",
+  precio: "",
+  estado: true,
+};
+
 const IconImg = ({ name, alt }) => (
   <img
     src={`/img/icon/${name}.png`}
@@ -31,6 +40,18 @@ const IconImg = ({ name, alt }) => (
 );
 
 export default function Configuracion() {
+  const location = useLocation();
+
+  const obtenerTabDesdeRuta = () => {
+    if (location.pathname.includes("procedimientos")) return "procedimientos";
+    if (location.pathname.includes("consultas")) return "consultas";
+    if (location.pathname.includes("laboratorios")) return "laboratorios";
+    if (location.pathname.includes("medicamentos")) return "medicamentos";
+    return "usuarios";
+  };
+
+  const tabActiva = obtenerTabDesdeRuta();
+
   const [usuarios, setUsuarios] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [mensaje, setMensaje] = useState("");
@@ -45,12 +66,21 @@ export default function Configuracion() {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [modoEditarDatos, setModoEditarDatos] = useState(false);
 
+  const [procedimientos, setProcedimientos] = useState([]);
+  const [procedimientoForm, setProcedimientoForm] = useState(
+    initialProcedimientoForm
+  );
+  const [procedimientoSeleccionado, setProcedimientoSeleccionado] =
+    useState(null);
+  const [filtroProcedimiento, setFiltroProcedimiento] = useState("");
+
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     obtenerUsuarios();
+    obtenerProcedimientos();
   }, []);
 
   useEffect(() => {
@@ -93,6 +123,25 @@ export default function Configuracion() {
     }
   };
 
+  const obtenerProcedimientos = async () => {
+    try {
+      const res = await fetch(API_PROCEDIMIENTOS);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.message || "No fue posible obtener procedimientos");
+        setTipoMensaje("error");
+        return;
+      }
+
+      setProcedimientos(Array.isArray(data) ? data : data.data || []);
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error al obtener procedimientos");
+      setTipoMensaje("error");
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -111,12 +160,27 @@ export default function Configuracion() {
     }));
   };
 
+  const handleProcedimientoChange = (e) => {
+    const { name, value } = e.target;
+
+    setProcedimientoForm((prev) => ({
+      ...prev,
+      [name]: name === "estado" ? value === "true" : value,
+    }));
+  };
+
   const limpiarFormulario = () => {
     setForm(initialForm);
     setMensaje("");
     setUsuarioSeleccionado(null);
     setModoEdicion(false);
     setModoEditarDatos(false);
+  };
+
+  const limpiarProcedimiento = () => {
+    setProcedimientoForm(initialProcedimientoForm);
+    setProcedimientoSeleccionado(null);
+    setFiltroProcedimiento("");
   };
 
   const abrirModal = () => {
@@ -162,6 +226,20 @@ export default function Configuracion() {
     setTipoMensaje("info");
   };
 
+  const seleccionarProcedimiento = (procedimiento) => {
+    setProcedimientoSeleccionado(procedimiento);
+
+    setProcedimientoForm({
+      codigo: procedimiento.codigo || "",
+      nombre: procedimiento.nombre || "",
+      precio: procedimiento.precio || "",
+      estado: procedimiento.estado ?? true,
+    });
+
+    setMensaje("Procedimiento cargado correctamente");
+    setTipoMensaje("info");
+  };
+
   const crearUsuario = async () => {
     try {
       setMensaje("");
@@ -187,6 +265,63 @@ export default function Configuracion() {
     } catch (error) {
       console.error(error);
       setMensaje("Error al crear usuario");
+      setTipoMensaje("error");
+    }
+  };
+
+  const guardarProcedimiento = async () => {
+    try {
+      setMensaje("");
+
+      if (
+        !procedimientoForm.codigo.trim() ||
+        !procedimientoForm.nombre.trim() ||
+        procedimientoForm.precio === ""
+      ) {
+        setMensaje("Complete código, nombre y precio del procedimiento");
+        setTipoMensaje("error");
+        return;
+      }
+
+      const payload = {
+        ...procedimientoForm,
+        codigo: procedimientoForm.codigo.trim(),
+        nombre: procedimientoForm.nombre.trim(),
+        precio: Number(procedimientoForm.precio),
+      };
+
+      const url = procedimientoSeleccionado?._id
+        ? `${API_PROCEDIMIENTOS}/${procedimientoSeleccionado._id}`
+        : API_PROCEDIMIENTOS;
+
+      const method = procedimientoSeleccionado?._id ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.message || "No fue posible guardar el procedimiento");
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje(
+        procedimientoSeleccionado?._id
+          ? "Procedimiento actualizado correctamente"
+          : "Procedimiento creado correctamente"
+      );
+
+      setTipoMensaje("success");
+      limpiarProcedimiento();
+      obtenerProcedimientos();
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error al guardar procedimiento");
       setTipoMensaje("error");
     }
   };
@@ -239,6 +374,44 @@ export default function Configuracion() {
     }
   };
 
+  const resetPasswordUsuario = async () => {
+    try {
+      if (!usuarioSeleccionado?._id) {
+        setMensaje("Seleccione un usuario");
+        setTipoMensaje("error");
+        return;
+      }
+
+      const confirmar = window.confirm(
+        "¿Desea restablecer la contraseña del usuario a 123?"
+      );
+
+      if (!confirmar) return;
+
+      const res = await fetch(
+        `${API_URL}/${usuarioSeleccionado._id}/reset-password`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.message || "No fue posible restablecer la contraseña");
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje("Contraseña restablecida correctamente. Nueva contraseña: 123");
+      setTipoMensaje("success");
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error al restablecer contraseña");
+      setTipoMensaje("error");
+    }
+  };
+
   const cambiarEstado = async (id) => {
     try {
       const res = await fetch(`${API_URL}/${id}/estado`, {
@@ -277,6 +450,11 @@ export default function Configuracion() {
     return texto.includes(filtro.toLowerCase());
   });
 
+  const procedimientosFiltrados = procedimientos.filter((p) => {
+    const texto = `${p.codigo} ${p.nombre} ${p.precio}`.toLowerCase();
+    return texto.includes(filtroProcedimiento.toLowerCase());
+  });
+
   return (
     <div className="configuracion-page">
       {mensaje && (
@@ -285,197 +463,371 @@ export default function Configuracion() {
         </div>
       )}
 
-      <section className="config-card usuario-card">
-        <div className="usuario-title-bar">
-          <span className="usuario-title-icon">
-            <IconImg name="usuario" alt="Usuario" />
-          </span>
+      {tabActiva === "usuarios" && (
+        <section className="config-card usuario-card">
+          <div className="usuario-title-bar">
+            <span className="usuario-title-icon">
+              <IconImg name="usuario" alt="Usuario" />
+            </span>
 
-          <h2>{modoEdicion ? "Usuario seleccionado" : "Crear Usuarios"}</h2>
+            <h2>{modoEdicion ? "Usuario seleccionado" : "Crear Usuarios"}</h2>
 
-          <div className="usuario-title-actions">
-            {modoEdicion && usuarioSeleccionado && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setModoEditarDatos(true)}
-                  title="Editar usuario"
-                >
-                  <IconImg name="editar" alt="Editar" />
-                </button>
+            <div className="usuario-title-actions">
+              {modoEdicion && usuarioSeleccionado && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setModoEditarDatos(true)}
+                    title="Editar usuario"
+                  >
+                    <IconImg name="editar" alt="Editar" />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={abrirPasswordModal}
-                  title="Cambiar contraseña"
-                >
-                  <IconImg name="password" alt="Cambiar contraseña" />
-                </button>
+                  <button
+                    type="button"
+                    onClick={abrirPasswordModal}
+                    title="Cambiar contraseña"
+                  >
+                    <IconImg name="password" alt="Cambiar contraseña" />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => cambiarEstado(usuarioSeleccionado._id)}
-                  title={
-                    usuarioSeleccionado.estado
-                      ? "Bloquear usuario"
-                      : "Desbloquear usuario"
-                  }
-                >
-                  {usuarioSeleccionado.estado ? (
-                    <IconImg name="bloquear" alt="Bloquear" />
-                  ) : (
-                    <IconImg name="desbloquear" alt="Desbloquear" />
-                  )}
-                </button>
-              </>
-            )}
+                  <button
+                    type="button"
+                    onClick={() => cambiarEstado(usuarioSeleccionado._id)}
+                    title={
+                      usuarioSeleccionado.estado
+                        ? "Bloquear usuario"
+                        : "Desbloquear usuario"
+                    }
+                  >
+                    {usuarioSeleccionado.estado ? (
+                      <IconImg name="bloquear" alt="Bloquear" />
+                    ) : (
+                      <IconImg name="desbloquear" alt="Desbloquear" />
+                    )}
+                  </button>
 
-            <button type="button" onClick={limpiarFormulario} title="Nuevo">
-              <IconImg name="nuevo" alt="Nuevo" />
-            </button>
+                  <button
+                    type="button"
+                    className="btn-reset-password"
+                    onClick={resetPasswordUsuario}
+                    title="Reset Password"
+                  >
+                    <IconImg name="reset-password" alt="Reset Password" />
+                  </button>
+                </>
+              )}
 
-            <button type="button" onClick={crearUsuario} title="Guardar">
-              <IconImg name="guardar" alt="Guardar" />
-            </button>
+              <button type="button" onClick={limpiarFormulario} title="Nuevo">
+                <IconImg name="nuevo" alt="Nuevo" />
+              </button>
 
-            <button type="button" onClick={abrirModal} title="Buscar usuario">
+              <button type="button" onClick={crearUsuario} title="Guardar">
+                <IconImg name="guardar" alt="Guardar" />
+              </button>
+
+              <button type="button" onClick={abrirModal} title="Buscar usuario">
+                <IconImg name="buscar" alt="Buscar" />
+              </button>
+            </div>
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Correo</label>
+            <input
+              name="correo"
+              value={form.correo}
+              onChange={handleChange}
+              placeholder="correo@saludya.com"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Nombres</label>
+            <input
+              name="nombre"
+              value={form.nombre}
+              onChange={handleChange}
+              placeholder="Nombres"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Apellidos</label>
+            <input
+              name="apellido"
+              value={form.apellido}
+              onChange={handleChange}
+              placeholder="Apellidos"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Teléfono</label>
+            <input
+              name="telefono"
+              value={form.telefono}
+              onChange={handleChange}
+              placeholder="Teléfono"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Nombre Usuario</label>
+            <input
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              placeholder="Usuario"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder={
+                modoEdicion
+                  ? "Se cambia desde el botón de contraseña"
+                  : "Contraseña"
+              }
+              disabled={modoEdicion}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Repetir Password</label>
+            <input
+              type="password"
+              name="repetirPassword"
+              value={form.repetirPassword}
+              onChange={handleChange}
+              placeholder={
+                modoEdicion
+                  ? "Se cambia desde el botón de contraseña"
+                  : "Repetir contraseña"
+              }
+              disabled={modoEdicion}
+            />
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Sexo</label>
+            <select
+              name="sexo"
+              value={form.sexo}
+              onChange={handleChange}
+              disabled={modoEdicion && !modoEditarDatos}
+            >
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Rol</label>
+            <select
+              name="nivelAcceso"
+              value={form.nivelAcceso}
+              onChange={handleChange}
+              disabled={modoEdicion && !modoEditarDatos}
+            >
+              <option value="Administrador">Administrador</option>
+              <option value="Admisión">Admisión</option>
+              <option value="Médico">Médico</option>
+              <option value="Facturación">Facturación</option>
+            </select>
+          </div>
+
+          <div className="usuario-form-line">
+            <label>Estado de la Cuenta</label>
+            <select
+              value={form.estado ? "true" : "false"}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  estado: e.target.value === "true",
+                }))
+              }
+              disabled={modoEdicion}
+            >
+              <option value="true">Activa</option>
+              <option value="false">Desactivada</option>
+            </select>
+          </div>
+        </section>
+      )}
+
+      {tabActiva === "procedimientos" && (
+        <section className="config-card">
+          <div className="usuario-title-bar">
+            <span className="usuario-title-icon">
+              <IconImg name="procedimiento" alt="Procedimiento" />
+            </span>
+
+            <h2>
+              {procedimientoSeleccionado
+                ? "Procedimiento seleccionado"
+                : "Crear Procedimiento"}
+            </h2>
+
+            <div className="usuario-title-actions">
+              <button
+                type="button"
+                onClick={limpiarProcedimiento}
+                title="Nuevo procedimiento"
+              >
+                <IconImg name="nuevo" alt="Nuevo" />
+              </button>
+
+              <button
+                type="button"
+                onClick={guardarProcedimiento}
+                title="Guardar procedimiento"
+              >
+                <IconImg name="guardar" alt="Guardar" />
+              </button>
+            </div>
+          </div>
+
+          <div className="config-form-grid">
+            <div className="config-field">
+              <label>Código</label>
+              <input
+                type="text"
+                name="codigo"
+                value={procedimientoForm.codigo}
+                onChange={handleProcedimientoChange}
+                placeholder="Ej: PROC001"
+              />
+            </div>
+
+            <div className="config-field">
+              <label>Nombre</label>
+              <input
+                type="text"
+                name="nombre"
+                value={procedimientoForm.nombre}
+                onChange={handleProcedimientoChange}
+                placeholder="Nombre del procedimiento"
+              />
+            </div>
+
+            <div className="config-field">
+              <label>Precio</label>
+              <input
+                type="number"
+                name="precio"
+                value={procedimientoForm.precio}
+                onChange={handleProcedimientoChange}
+                placeholder="Precio"
+              />
+            </div>
+
+            <div className="config-field">
+              <label>Estado</label>
+              <select
+                name="estado"
+                value={procedimientoForm.estado ? "true" : "false"}
+                onChange={handleProcedimientoChange}
+              >
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="modal-search">
+            <select>
+              <option>Nombre</option>
+              <option>Código</option>
+              <option>Precio</option>
+            </select>
+
+            <input
+              placeholder="Buscar procedimiento..."
+              value={filtroProcedimiento}
+              onChange={(e) => setFiltroProcedimiento(e.target.value)}
+            />
+
+            <button type="button" className="config-btn config-btn--secondary">
               <IconImg name="buscar" alt="Buscar" />
+              BUSCAR
             </button>
           </div>
-        </div>
 
-        <div className="usuario-form-line">
-          <label>Correo</label>
-          <input
-            name="correo"
-            value={form.correo}
-            onChange={handleChange}
-            placeholder="correo@saludya.com"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+          <div className="modal-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Precio</th>
+                  <th>Estado</th>
+                  <th>Seleccionar</th>
+                </tr>
+              </thead>
 
-        <div className="usuario-form-line">
-          <label>Nombres</label>
-          <input
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            placeholder="Nombres"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+              <tbody>
+                {procedimientosFiltrados.length > 0 ? (
+                  procedimientosFiltrados.map((p) => (
+                    <tr
+                      key={p._id}
+                      className="modal-row-select"
+                      onClick={() => seleccionarProcedimiento(p)}
+                    >
+                      <td>{p.codigo}</td>
+                      <td>{p.nombre}</td>
+                      <td>${Number(p.precio || 0).toLocaleString("es-CO")}</td>
+                      <td>{p.estado ? "Activo" : "Inactivo"}</td>
+                      <td>Seleccionar</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No hay procedimientos registrados</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
-        <div className="usuario-form-line">
-          <label>Apellidos</label>
-          <input
-            name="apellido"
-            value={form.apellido}
-            onChange={handleChange}
-            placeholder="Apellidos"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+      {tabActiva === "laboratorios" && (
+        <section className="config-card">
+          <div className="config-card-header">
+            <h2>Laboratorios</h2>
+            <span>Este catálogo será desarrollado en el siguiente paso.</span>
+          </div>
+        </section>
+      )}
 
-        <div className="usuario-form-line">
-          <label>Teléfono</label>
-          <input
-            name="telefono"
-            value={form.telefono}
-            onChange={handleChange}
-            placeholder="Teléfono"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+      {tabActiva === "medicamentos" && (
+        <section className="config-card">
+          <div className="config-card-header">
+            <h2>Medicamentos</h2>
+            <span>Este catálogo será desarrollado en el siguiente paso.</span>
+          </div>
+        </section>
+      )}
 
-        <div className="usuario-form-line">
-          <label>Nombre Usuario</label>
-          <input
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            placeholder="Usuario"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
-
-        <div className="usuario-form-line">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder={
-              modoEdicion
-                ? "Se cambia desde el botón de contraseña"
-                : "Contraseña"
-            }
-            disabled={modoEdicion}
-          />
-        </div>
-
-        <div className="usuario-form-line">
-          <label>Repetir Password</label>
-          <input
-            type="password"
-            name="repetirPassword"
-            value={form.repetirPassword}
-            onChange={handleChange}
-            placeholder={
-              modoEdicion
-                ? "Se cambia desde el botón de contraseña"
-                : "Repetir contraseña"
-            }
-            disabled={modoEdicion}
-          />
-        </div>
-
-        <div className="usuario-form-line">
-          <label>Sexo</label>
-          <select
-            name="sexo"
-            value={form.sexo}
-            onChange={handleChange}
-            disabled={modoEdicion && !modoEditarDatos}
-          >
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-          </select>
-        </div>
-
-        <div className="usuario-form-line">
-          <label>Rol</label>
-          <select
-            name="nivelAcceso"
-            value={form.nivelAcceso}
-            onChange={handleChange}
-            disabled={modoEdicion && !modoEditarDatos}
-          >
-            <option value="Administrador">Administrador</option>
-            <option value="Admisión">Admisión</option>
-            <option value="Médico">Médico</option>
-            <option value="Facturación">Facturación</option>
-          </select>
-        </div>
-
-        <div className="usuario-form-line">
-          <label>Estado de la Cuenta</label>
-          <select
-            value={form.estado ? "true" : "false"}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                estado: e.target.value === "true",
-              }))
-            }
-            disabled={modoEdicion}
-          >
-            <option value="true">Activa</option>
-            <option value="false">Desactivada</option>
-          </select>
-        </div>
-      </section>
+      {tabActiva === "consultas" && (
+        <section className="config-card">
+          <div className="config-card-header">
+            <h2>Tipos de consulta</h2>
+            <span>Este catálogo será desarrollado en el siguiente paso.</span>
+          </div>
+        </section>
+      )}
 
       {showModal && (
         <div className="modal-overlay">
@@ -507,7 +859,6 @@ export default function Configuracion() {
                 <option>Nombre</option>
                 <option>Usuario</option>
                 <option>Username</option>
-               
               </select>
 
               <input
@@ -625,8 +976,6 @@ export default function Configuracion() {
               >
                 <IconImg name="guardar" alt="Guardar" />
               </button>
-
-              
             </div>
           </div>
         </div>
