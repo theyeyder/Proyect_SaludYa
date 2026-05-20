@@ -670,7 +670,7 @@ export default function Configuracion() {
         <section className="config-card">
           <div className="usuario-title-bar">
             <span className="usuario-title-icon">
-              <IconImg name="procedimiento" alt="Procedimiento" />
+              <IconImg name="procedimiento" alt="Procedimien" />
             </span>
 
             <h2>
