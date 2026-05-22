@@ -11,6 +11,10 @@ const procedimientoRoutes = require(
   "./modules/configuracion/procedimientos/procedimiento.routes"
 );
 
+const tipoConsultaRoutes = require(
+  "./modules/configuracion/tiposConsulta/tipoConsulta.routes"
+);
+
 const pacienteRoutes = require(
   "./modules/admision/paciente.routes"
 );
@@ -66,5 +70,7 @@ app.use("/api/ordenes", ordenRoutes);
 app.use("/api/facturas", facturaRoutes);
 
 app.use("/api/documentos", documentoRoutes);
+
+app.use("/api/tipos-consulta", tipoConsultaRoutes);
 
 module.exports = app;

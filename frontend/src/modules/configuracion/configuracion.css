@@ -1149,3 +1149,356 @@
   background: #e0e7ed;
   transform: translateY(-1px);
 }
+
+/* ================= PROCEDIMIENTOS ================= */
+
+.proc-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #09946695;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.proc-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #27aeca;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-bottom: 1px solid #06b2f7;
+}
+
+.proc-title-bar h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.proc-title-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.proc-title-actions button {
+  width: 34px;
+  height: 30px;
+  border: 1px solid #7b8b96;
+  border-radius: 6px;
+  background: #f3f7f9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proc-title-actions button:hover {
+  background: #e0e7ed;
+  transform: translateY(-1px);
+}
+
+.proc-form-grid {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.proc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proc-field label {
+  color: #0b4e91;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.proc-field input,
+.proc-field select {
+  height: 34px;
+  border: 1px solid #777;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.proc-field input:focus,
+.proc-field select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.proc-search {
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  background: #ffffff;
+  border-top: 1px solid #dbe3ea;
+  border-bottom: 1px solid #dbe3ea;
+}
+
+.proc-search input {
+  height: 36px;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.proc-table {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.proc-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.proc-table th {
+  background: #06d3ea;
+  color: #ffffff;
+  padding: 10px 8px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.proc-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.proc-table tr:nth-child(even) {
+  background: #f3f8fb;
+}
+
+.proc-table tr:hover {
+  background: #e6f5fb;
+}
+
+.proc-table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.proc-btn-edit,
+.proc-btn-enable,
+.proc-btn-disable {
+  border: none;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.proc-btn-edit {
+  background: #25d7eb;
+}
+
+.proc-btn-enable {
+  background: #0e8c3c;
+}
+
+.proc-btn-disable {
+  background: #e70606cd;
+}
+
+.proc-btn-edit:hover,
+.proc-btn-enable:hover,
+.proc-btn-disable:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* ================= CONSULTAS ================= */
+/* Estilos independientes para Tipos de Consulta */
+
+.consulta-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #8b5cf6;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.consulta-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #36acd0;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-bottom: 1px solid #6d28d9;
+}
+
+.consulta-title-bar h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.consulta-title-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.consulta-title-actions button {
+  width: 34px;
+  height: 30px;
+  border: 1px solid #7b8b96;
+  border-radius: 6px;
+  background: #f3f7f9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.consulta-title-actions button:hover {
+  background: #e0e7ed;
+  transform: translateY(-1px);
+}
+
+.consulta-form-grid {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.consulta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.consulta-field label {
+  color: #2178b6;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.consulta-field input,
+.consulta-field select {
+  height: 34px;
+  border: 1px solid #777;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.consulta-field input:focus,
+.consulta-field select:focus {
+  outline: none;
+  border-color: #170909;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.consulta-search {
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  background: #ffffff;
+  border-top: 1px solid #dbe3ea;
+  border-bottom: 1px solid #dbe3ea;
+}
+
+.consulta-search input {
+  height: 36px;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.consulta-table {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.consulta-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.consulta-table th {
+  background: #00b6ed;
+  color: #ffffff;
+  padding: 10px 8px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.consulta-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.consulta-table tr:nth-child(even) {
+  background: #f5f3ff;
+}
+
+.consulta-table tr:hover {
+  background: #ede9fe;
+}
+
+.consulta-table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.consulta-btn-edit,
+.consulta-btn-enable,
+.consulta-btn-disable {
+  border: none;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.consulta-btn-edit {
+  background: #238e9a;
+}
+
+.consulta-btn-enable {
+  background: #15803d;
+}
+
+.consulta-btn-disable {
+  background: #dc2626;
+}
+
+.consulta-btn-edit:hover,
+.consulta-btn-enable:hover,
+.consulta-btn-disable:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}

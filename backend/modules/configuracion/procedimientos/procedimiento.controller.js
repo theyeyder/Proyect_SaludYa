@@ -1,69 +1,80 @@
 const service = require("./procedimiento.service");
 
 async function crear(req, res) {
-
   try {
+    const procedimiento = await service.crearProcedimiento(req.body);
 
-    const procedimiento =
-      await service.crearProcedimiento(
-        req.body
-      );
-
-    res.status(201).json(procedimiento);
-
+    return res.status(201).json({
+      ok: true,
+      data: procedimiento,
+      message: "Procedimiento creado correctamente",
+    });
   } catch (error) {
-
-    res.status(400).json({
+    return res.status(400).json({
+      ok: false,
       message: error.message,
     });
-
   }
-
 }
 
 async function obtener(req, res) {
-
   try {
+    const data = await service.obtenerProcedimientos();
 
-    const data =
-      await service.obtenerProcedimientos();
-
-    res.json(data);
-
+    return res.json({
+      ok: true,
+      data,
+    });
   } catch (error) {
-
-    res.status(500).json({
+    return res.status(500).json({
+      ok: false,
       message: error.message,
     });
-
   }
-
 }
 
 async function actualizar(req, res) {
-
   try {
+    const actualizado = await service.actualizarProcedimiento(
+      req.params.id,
+      req.body
+    );
 
-    const actualizado =
-      await service.actualizarProcedimiento(
-        req.params.id,
-        req.body
-      );
-
-    res.json(actualizado);
-
+    return res.json({
+      ok: true,
+      data: actualizado,
+      message: "Procedimiento actualizado correctamente",
+    });
   } catch (error) {
-
-    res.status(500).json({
+    return res.status(400).json({
+      ok: false,
       message: error.message,
     });
-
   }
+}
 
+async function cambiarEstado(req, res) {
+  try {
+    const actualizado = await service.cambiarEstadoProcedimiento(req.params.id);
+
+    return res.json({
+      ok: true,
+      data: actualizado,
+      message: actualizado.estado
+        ? "Procedimiento habilitado correctamente"
+        : "Procedimiento deshabilitado correctamente",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
 }
 
 module.exports = {
   crear,
   obtener,
   actualizar,
+  cambiarEstado,
 };
