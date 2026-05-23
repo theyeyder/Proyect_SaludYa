@@ -1333,7 +1333,7 @@
   background: #ffffff;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid #8b5cf6;
+  border: 1px solid #09946695;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
@@ -1341,10 +1341,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #36acd0;
+  background: #27aeca;
   color: #ffffff;
   padding: 8px 14px;
-  border-bottom: 1px solid #6d28d9;
+  border-bottom: 1px solid #06b2f7;
 }
 
 .consulta-title-bar h2 {
@@ -1360,20 +1360,43 @@
 }
 
 .consulta-title-actions button {
-  width: 34px;
-  height: 30px;
-  border: 1px solid #7b8b96;
-  border-radius: 6px;
-  background: #f3f7f9;
+  width: 36px;
+  height: 34px;
+
+  border: 1px solid #6f7f88;
+  border-radius: 7px;
+
+  background: #f4f7fa;
+
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
+  overflow: hidden;
+
+  transition: all 0.2s ease;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 3px rgba(0, 0, 0, 0.18);
 }
 
 .consulta-title-actions button:hover {
-  background: #e0e7ed;
+  background: #ffffff;
   transform: translateY(-1px);
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.consulta-title-actions button .usuario-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
 }
 
 .consulta-form-grid {
@@ -1390,7 +1413,7 @@
 }
 
 .consulta-field label {
-  color: #2178b6;
+  color: #0b4e91;
   font-size: 14px;
   font-weight: 600;
 }
@@ -1408,8 +1431,8 @@
 .consulta-field input:focus,
 .consulta-field select:focus {
   outline: none;
-  border-color: #170909;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .consulta-search {
@@ -1441,7 +1464,7 @@
 }
 
 .consulta-table th {
-  background: #00b6ed;
+  background: #06d3ea;
   color: #ffffff;
   padding: 10px 8px;
   text-align: left;
@@ -1459,11 +1482,11 @@
 }
 
 .consulta-table tr:nth-child(even) {
-  background: #f5f3ff;
+  background: #f3f8fb;
 }
 
 .consulta-table tr:hover {
-  background: #ede9fe;
+  background: #e6f5fb;
 }
 
 .consulta-table-actions {
@@ -1485,15 +1508,15 @@
 }
 
 .consulta-btn-edit {
-  background: #238e9a;
+  background: #25d7eb;
 }
 
 .consulta-btn-enable {
-  background: #15803d;
+  background: #0e8c3c;
 }
 
 .consulta-btn-disable {
-  background: #dc2626;
+  background: #e70606cd;
 }
 
 .consulta-btn-edit:hover,
