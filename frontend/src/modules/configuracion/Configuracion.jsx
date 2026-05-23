@@ -5,6 +5,7 @@ import "./configuracion.css";
 const API_URL = "http://localhost:4000/api/usuarios";
 const API_PROCEDIMIENTOS = "http://localhost:4000/api/procedimientos";
 const API_TIPOS_CONSULTA = "http://localhost:4000/api/tipos-consulta";
+const API_LABORATORIOS = "http://localhost:4000/api/laboratorios";
 
 const initialForm = {
   username: "",
@@ -33,6 +34,13 @@ const initialProcedimientoForm = {
 };
 
 const initialConsultaForm = {
+  codigo: "",
+  nombre: "",
+  precio: "",
+  estado: true,
+};
+
+const initialLaboratorioForm = {
   codigo: "",
   nombre: "",
   precio: "",
@@ -84,6 +92,11 @@ export default function Configuracion() {
   const [consultaSeleccionada, setConsultaSeleccionada] = useState(null);
   const [filtroConsulta, setFiltroConsulta] = useState("");
 
+  const [laboratorios, setLaboratorios] = useState([]);
+  const [laboratorioForm, setLaboratorioForm] = useState(initialLaboratorioForm);
+  const [laboratorioSeleccionado, setLaboratorioSeleccionado] = useState(null);
+  const [filtroLaboratorio, setFiltroLaboratorio] = useState("");
+
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -92,6 +105,7 @@ export default function Configuracion() {
     obtenerUsuarios();
     obtenerProcedimientos();
     obtenerConsultas();
+    obtenerLaboratorios();
   }, []);
 
   useEffect(() => {
@@ -134,7 +148,6 @@ export default function Configuracion() {
     }
   };
 
-
   const obtenerProcedimientos = async () => {
     try {
       const res = await fetch(API_PROCEDIMIENTOS);
@@ -170,6 +183,21 @@ export default function Configuracion() {
       console.error(error);
       setMensaje("Error al obtener tipos de consulta");
       setTipoMensaje("error");
+    }
+  };
+
+  const obtenerLaboratorios = async () => {
+    try {
+      const res = await fetch(API_LABORATORIOS);
+      const data = await res.json();
+
+      setLaboratorios(
+        Array.isArray(data)
+          ? data
+          : data.data || []
+      );
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -389,7 +417,6 @@ export default function Configuracion() {
       setTipoMensaje("error");
     }
   };
-
 
   const handleProcedimientoChange = (e) => {
     const { name, value } = e.target;
@@ -617,6 +644,129 @@ export default function Configuracion() {
     }
   };
 
+  // Funciones para Laboratorios (nuevas)
+  const handleLaboratorioChange = (e) => {
+    const { name, value } = e.target;
+
+    setLaboratorioForm((prev) => ({
+      ...prev,
+      [name]: name === "estado" ? value === "true" : value,
+    }));
+  };
+
+  const limpiarLaboratorio = () => {
+    setLaboratorioForm(initialLaboratorioForm);
+    setLaboratorioSeleccionado(null);
+    setFiltroLaboratorio("");
+  };
+
+  const seleccionarLaboratorio = (laboratorio) => {
+    setLaboratorioSeleccionado(laboratorio);
+
+    setLaboratorioForm({
+      codigo: laboratorio.codigo || "",
+      nombre: laboratorio.nombre || "",
+      precio: laboratorio.precio || "",
+      estado: laboratorio.estado ?? true,
+    });
+
+    setMensaje("Laboratorio cargado correctamente");
+    setTipoMensaje("info");
+  };
+
+  const guardarLaboratorio = async () => {
+    try {
+      if (
+        !laboratorioForm.codigo.trim() ||
+        !laboratorioForm.nombre.trim() ||
+        laboratorioForm.precio === ""
+      ) {
+        setMensaje("Complete código, nombre y precio");
+        setTipoMensaje("error");
+        return;
+      }
+
+      const payload = {
+        ...laboratorioForm,
+        codigo: laboratorioForm.codigo.trim(),
+        nombre: laboratorioForm.nombre.trim(),
+        precio: Number(laboratorioForm.precio),
+      };
+
+      const url = laboratorioSeleccionado?._id
+        ? `${API_LABORATORIOS}/${laboratorioSeleccionado._id}`
+        : API_LABORATORIOS;
+
+      const method = laboratorioSeleccionado?._id ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(
+          data.message || "No fue posible guardar el laboratorio"
+        );
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje(
+        laboratorioSeleccionado?._id
+          ? "Laboratorio actualizado correctamente"
+          : "Laboratorio creado correctamente"
+      );
+
+      setTipoMensaje("success");
+
+      limpiarLaboratorio();
+      obtenerLaboratorios();
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error al guardar laboratorio");
+      setTipoMensaje("error");
+    }
+  };
+
+  const cambiarEstadoLaboratorio = async (laboratorio) => {
+    try {
+      const res = await fetch(
+        `${API_LABORATORIOS}/${laboratorio._id}/estado`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(
+          data.message || "No fue posible actualizar el estado"
+        );
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje(
+        laboratorio.estado
+          ? "Laboratorio deshabilitado"
+          : "Laboratorio habilitado"
+      );
+
+      setTipoMensaje("success");
+
+      obtenerLaboratorios();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const usuariosFiltrados = usuarios.filter((u) => {
     const texto = `${u.username} ${u.nombre} ${u.apellido} ${u.correo}`.toLowerCase();
     return texto.includes(filtro.toLowerCase());
@@ -630,6 +780,16 @@ export default function Configuracion() {
   const consultasFiltradas = consultas.filter((c) => {
     const texto = `${c.codigo || ""} ${c.nombre || ""} ${c.precio || ""}`.toLowerCase();
     return texto.includes(filtroConsulta.toLowerCase());
+  });
+
+  const laboratoriosFiltrados = laboratorios.filter((l) => {
+    const texto = `
+      ${l.codigo || ""}
+      ${l.nombre || ""}
+      ${l.precio || ""}
+    `.toLowerCase();
+
+    return texto.includes(filtroLaboratorio.toLowerCase());
   });
 
   return (
@@ -843,7 +1003,6 @@ export default function Configuracion() {
         </section>
       )}
 
-
       {tabActiva === "procedimientos" && (
         <section className="proc-card">
           <div className="proc-title-bar">
@@ -979,7 +1138,7 @@ export default function Configuracion() {
         <section className="consulta-card">
           <div className="consulta-title-bar">
             <span className="usuario-title-icon">
-              <IconImg name="consultas" alt="Consultas" />
+              <IconImg name="iconconsultas" alt="Consultas" />
             </span>
 
             <h2>
@@ -1117,10 +1276,132 @@ export default function Configuracion() {
       )}
 
       {tabActiva === "laboratorios" && (
-        <section className="config-card">
-          <div className="config-card-header">
-            <h2>Laboratorios</h2>
-            <span>Este catálogo será desarrollado en el siguiente paso.</span>
+        <section className="lab-card">
+          <div className="lab-title-bar">
+            <span className="usuario-title-icon">
+              <IconImg name="laboratorio" alt="Laboratorio" />
+            </span>
+
+            <h2>
+              {laboratorioSeleccionado
+                ? "Editar Laboratorio"
+                : "Crear Laboratorio"}
+            </h2>
+
+            <div className="lab-title-actions">
+              <button type="button" onClick={limpiarLaboratorio} title="Nuevo">
+                <IconImg name="nuevo" alt="Nuevo" />
+              </button>
+
+              <button type="button" onClick={guardarLaboratorio} title="Guardar">
+                <IconImg name="guardar" alt="Guardar" />
+              </button>
+            </div>
+          </div>
+
+          <div className="lab-form-grid">
+            <div className="lab-field">
+              <label>Código</label>
+              <input
+                type="text"
+                name="codigo"
+                value={laboratorioForm.codigo}
+                onChange={handleLaboratorioChange}
+                placeholder="Ej: LAB001"
+              />
+            </div>
+
+            <div className="lab-field">
+              <label>Nombre</label>
+              <input
+                type="text"
+                name="nombre"
+                value={laboratorioForm.nombre}
+                onChange={handleLaboratorioChange}
+                placeholder="Ej: Hemograma"
+              />
+            </div>
+
+            <div className="lab-field">
+              <label>Precio</label>
+              <input
+                type="number"
+                name="precio"
+                value={laboratorioForm.precio}
+                onChange={handleLaboratorioChange}
+                placeholder="Precio"
+              />
+            </div>
+
+            <div className="lab-field">
+              <label>Estado</label>
+              <select
+                name="estado"
+                value={laboratorioForm.estado ? "true" : "false"}
+                onChange={handleLaboratorioChange}
+              >
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="lab-search">
+            <input
+              placeholder="Buscar por código, nombre o precio..."
+              value={filtroLaboratorio}
+              onChange={(e) => setFiltroLaboratorio(e.target.value)}
+            />
+          </div>
+
+          <div className="lab-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Precio</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {laboratoriosFiltrados.length > 0 ? (
+                  laboratoriosFiltrados.map((l) => (
+                    <tr key={l._id}>
+                      <td>{l.codigo}</td>
+                      <td>{l.nombre}</td>
+                      <td>${Number(l.precio || 0).toLocaleString("es-CO")}</td>
+                      <td>{l.estado ? "Activo" : "Inactivo"}</td>
+                      <td>
+                        <div className="lab-table-actions">
+                          <button
+                            type="button"
+                            className="lab-btn-edit"
+                            onClick={() => seleccionarLaboratorio(l)}
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            type="button"
+                            className={l.estado ? "lab-btn-disable" : "lab-btn-enable"}
+                            onClick={() => cambiarEstadoLaboratorio(l)}
+                          >
+                            {l.estado ? "Deshabilitar" : "Habilitar"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No hay laboratorios registrados</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </section>
       )}
@@ -1133,7 +1414,6 @@ export default function Configuracion() {
           </div>
         </section>
       )}
-
 
       {showModal && (
         <div className="modal-overlay">

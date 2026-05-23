@@ -15,6 +15,10 @@ const tipoConsultaRoutes = require(
   "./modules/configuracion/tiposConsulta/tipoConsulta.routes"
 );
 
+const laboratorioRoutes = require(
+  "./modules/configuracion/laboratorio/laboratorio.routes"
+);
+
 const pacienteRoutes = require(
   "./modules/admision/paciente.routes"
 );
@@ -54,10 +58,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/usuarios", usuarioRoutes);
 
-app.use(
-  "/api/procedimientos",
-  procedimientoRoutes
-);
+app.use("/api/procedimientos", procedimientoRoutes);
 
 app.use("/api/pacientes", pacienteRoutes);
 
@@ -72,5 +73,7 @@ app.use("/api/facturas", facturaRoutes);
 app.use("/api/documentos", documentoRoutes);
 
 app.use("/api/tipos-consulta", tipoConsultaRoutes);
+
+app.use("/api/laboratorios", laboratorioRoutes);
 
 module.exports = app;
