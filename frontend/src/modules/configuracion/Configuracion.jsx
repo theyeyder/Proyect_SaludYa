@@ -6,6 +6,7 @@ const API_URL = "http://localhost:4000/api/usuarios";
 const API_PROCEDIMIENTOS = "http://localhost:4000/api/procedimientos";
 const API_TIPOS_CONSULTA = "http://localhost:4000/api/tipos-consulta";
 const API_LABORATORIOS = "http://localhost:4000/api/laboratorios";
+const API_MEDICAMENTOS = "http://localhost:4000/api/medicamentos";
 
 const initialForm = {
   username: "",
@@ -47,6 +48,16 @@ const initialLaboratorioForm = {
   estado: true,
 };
 
+const initialMedicamentoForm = {
+  codigo: "",
+  nombre: "",
+  concentracion: "",
+  presentacion: "",
+  cantidad: "",
+  precio: "",
+  estado: true,
+};
+
 const IconImg = ({ name, alt }) => (
   <img
     src={`/img/icon/${name}.png`}
@@ -83,8 +94,11 @@ export default function Configuracion() {
   const [modoEditarDatos, setModoEditarDatos] = useState(false);
 
   const [procedimientos, setProcedimientos] = useState([]);
-  const [procedimientoForm, setProcedimientoForm] = useState(initialProcedimientoForm);
-  const [procedimientoSeleccionado, setProcedimientoSeleccionado] = useState(null);
+  const [procedimientoForm, setProcedimientoForm] = useState(
+    initialProcedimientoForm,
+  );
+  const [procedimientoSeleccionado, setProcedimientoSeleccionado] =
+    useState(null);
   const [filtroProcedimiento, setFiltroProcedimiento] = useState("");
 
   const [consultas, setConsultas] = useState([]);
@@ -93,7 +107,9 @@ export default function Configuracion() {
   const [filtroConsulta, setFiltroConsulta] = useState("");
 
   const [laboratorios, setLaboratorios] = useState([]);
-  const [laboratorioForm, setLaboratorioForm] = useState(initialLaboratorioForm);
+  const [laboratorioForm, setLaboratorioForm] = useState(
+    initialLaboratorioForm,
+  );
   const [laboratorioSeleccionado, setLaboratorioSeleccionado] = useState(null);
   const [filtroLaboratorio, setFiltroLaboratorio] = useState("");
 
@@ -101,11 +117,19 @@ export default function Configuracion() {
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
+  const [medicamentos, setMedicamentos] = useState([]);
+  const [medicamentoForm, setMedicamentoForm] = useState(
+    initialMedicamentoForm,
+  );
+  const [medicamentoSeleccionado, setMedicamentoSeleccionado] = useState(null);
+  const [filtroMedicamento, setFiltroMedicamento] = useState("");
+
   useEffect(() => {
     obtenerUsuarios();
     obtenerProcedimientos();
     obtenerConsultas();
     obtenerLaboratorios();
+    obtenerMedicamentos();
   }, []);
 
   useEffect(() => {
@@ -191,11 +215,18 @@ export default function Configuracion() {
       const res = await fetch(API_LABORATORIOS);
       const data = await res.json();
 
-      setLaboratorios(
-        Array.isArray(data)
-          ? data
-          : data.data || []
-      );
+      setLaboratorios(Array.isArray(data) ? data : data.data || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const obtenerMedicamentos = async () => {
+    try {
+      const res = await fetch(API_MEDICAMENTOS);
+      const data = await res.json();
+
+      setMedicamentos(Array.isArray(data) ? data : data.data || []);
     } catch (error) {
       console.error(error);
     }
@@ -319,14 +350,17 @@ export default function Configuracion() {
     }
 
     try {
-      const res = await fetch(`${API_URL}/${usuarioSeleccionado._id}/password`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          passwordAnterior: passwordForm.passwordAnterior,
-          password: passwordForm.nuevaPassword,
-        }),
-      });
+      const res = await fetch(
+        `${API_URL}/${usuarioSeleccionado._id}/password`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            passwordAnterior: passwordForm.passwordAnterior,
+            password: passwordForm.nuevaPassword,
+          }),
+        },
+      );
 
       const data = await res.json();
 
@@ -356,7 +390,7 @@ export default function Configuracion() {
       }
 
       const confirmar = window.confirm(
-        "¿Desea restablecer la contraseña del usuario a 123?"
+        "¿Desea restablecer la contraseña del usuario a 123?",
       );
 
       if (!confirmar) return;
@@ -365,7 +399,7 @@ export default function Configuracion() {
         `${API_URL}/${usuarioSeleccionado._id}/reset-password`,
         {
           method: "PATCH",
-        }
+        },
       );
 
       const data = await res.json();
@@ -376,7 +410,9 @@ export default function Configuracion() {
         return;
       }
 
-      setMensaje("Contraseña restablecida correctamente. Nueva contraseña: 123");
+      setMensaje(
+        "Contraseña restablecida correctamente. Nueva contraseña: 123",
+      );
       setTipoMensaje("success");
     } catch (error) {
       console.error(error);
@@ -491,7 +527,7 @@ export default function Configuracion() {
       setMensaje(
         procedimientoSeleccionado?._id
           ? "Procedimiento actualizado correctamente"
-          : "Procedimiento creado correctamente"
+          : "Procedimiento creado correctamente",
       );
       setTipoMensaje("success");
 
@@ -506,20 +542,27 @@ export default function Configuracion() {
 
   const cambiarEstadoProcedimiento = async (procedimiento) => {
     try {
-      const res = await fetch(`${API_PROCEDIMIENTOS}/${procedimiento._id}/estado`, {
-        method: "PATCH",
-      });
+      const res = await fetch(
+        `${API_PROCEDIMIENTOS}/${procedimiento._id}/estado`,
+        {
+          method: "PATCH",
+        },
+      );
 
       const data = await res.json();
 
       if (!res.ok) {
-        setMensaje(data.message || "No fue posible actualizar el procedimiento");
+        setMensaje(
+          data.message || "No fue posible actualizar el procedimiento",
+        );
         setTipoMensaje("error");
         return;
       }
 
       setMensaje(
-        procedimiento.estado ? "Procedimiento deshabilitado" : "Procedimiento habilitado"
+        procedimiento.estado
+          ? "Procedimiento deshabilitado"
+          : "Procedimiento habilitado",
       );
       setTipoMensaje("success");
 
@@ -596,7 +639,9 @@ export default function Configuracion() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMensaje(data.message || "No fue posible guardar el tipo de consulta");
+        setMensaje(
+          data.message || "No fue posible guardar el tipo de consulta",
+        );
         setTipoMensaje("error");
         return;
       }
@@ -604,7 +649,7 @@ export default function Configuracion() {
       setMensaje(
         consultaSeleccionada?._id
           ? "Tipo de consulta actualizado correctamente"
-          : "Tipo de consulta creado correctamente"
+          : "Tipo de consulta creado correctamente",
       );
       setTipoMensaje("success");
 
@@ -632,7 +677,9 @@ export default function Configuracion() {
       }
 
       setMensaje(
-        consulta.estado ? "Tipo de consulta deshabilitado" : "Tipo de consulta habilitado"
+        consulta.estado
+          ? "Tipo de consulta deshabilitado"
+          : "Tipo de consulta habilitado",
       );
       setTipoMensaje("success");
 
@@ -644,7 +691,7 @@ export default function Configuracion() {
     }
   };
 
-  // Funciones para Laboratorios (nuevas)
+  // Funciones para Laboratorios
   const handleLaboratorioChange = (e) => {
     const { name, value } = e.target;
 
@@ -710,9 +757,7 @@ export default function Configuracion() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMensaje(
-          data.message || "No fue posible guardar el laboratorio"
-        );
+        setMensaje(data.message || "No fue posible guardar el laboratorio");
         setTipoMensaje("error");
         return;
       }
@@ -720,7 +765,7 @@ export default function Configuracion() {
       setMensaje(
         laboratorioSeleccionado?._id
           ? "Laboratorio actualizado correctamente"
-          : "Laboratorio creado correctamente"
+          : "Laboratorio creado correctamente",
       );
 
       setTipoMensaje("success");
@@ -736,19 +781,14 @@ export default function Configuracion() {
 
   const cambiarEstadoLaboratorio = async (laboratorio) => {
     try {
-      const res = await fetch(
-        `${API_LABORATORIOS}/${laboratorio._id}/estado`,
-        {
-          method: "PATCH",
-        }
-      );
+      const res = await fetch(`${API_LABORATORIOS}/${laboratorio._id}/estado`, {
+        method: "PATCH",
+      });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setMensaje(
-          data.message || "No fue posible actualizar el estado"
-        );
+        setMensaje(data.message || "No fue posible actualizar el estado");
         setTipoMensaje("error");
         return;
       }
@@ -756,7 +796,7 @@ export default function Configuracion() {
       setMensaje(
         laboratorio.estado
           ? "Laboratorio deshabilitado"
-          : "Laboratorio habilitado"
+          : "Laboratorio habilitado",
       );
 
       setTipoMensaje("success");
@@ -767,18 +807,147 @@ export default function Configuracion() {
     }
   };
 
+  // Funciones para Medicamentos
+  const handleMedicamentoChange = (e) => {
+    const { name, value } = e.target;
+
+    setMedicamentoForm((prev) => ({
+      ...prev,
+      [name]: name === "estado" ? value === "true" : value,
+    }));
+  };
+
+  const limpiarMedicamento = () => {
+    setMedicamentoForm(initialMedicamentoForm);
+    setMedicamentoSeleccionado(null);
+    setFiltroMedicamento("");
+  };
+
+  const seleccionarMedicamento = (medicamento) => {
+    setMedicamentoSeleccionado(medicamento);
+
+    setMedicamentoForm({
+      codigo: medicamento.codigo || "",
+      nombre: medicamento.nombre || "",
+      concentracion: medicamento.concentracion || "",
+      presentacion: medicamento.presentacion || "",
+      cantidad: medicamento.cantidad || "",
+      precio: medicamento.precio || "",
+      estado: medicamento.estado ?? true,
+    });
+
+    setMensaje("Medicamento cargado correctamente");
+    setTipoMensaje("info");
+  };
+
+  const guardarMedicamento = async () => {
+    try {
+      if (
+        !medicamentoForm.codigo.trim() ||
+        !medicamentoForm.nombre.trim() ||
+        !medicamentoForm.concentracion.trim() ||
+        !medicamentoForm.presentacion.trim()
+      ) {
+        setMensaje("Complete código, nombre, concentración y presentación");
+        setTipoMensaje("error");
+        return;
+      }
+
+      const payload = {
+        ...medicamentoForm,
+        codigo: medicamentoForm.codigo.trim(),
+        nombre: medicamentoForm.nombre.trim(),
+        concentracion: medicamentoForm.concentracion.trim(),
+        presentacion: medicamentoForm.presentacion.trim(),
+        cantidad: Number(medicamentoForm.cantidad || 0),
+        precio: Number(medicamentoForm.precio || 0),
+      };
+
+      const url = medicamentoSeleccionado?._id
+        ? `${API_MEDICAMENTOS}/${medicamentoSeleccionado._id}`
+        : API_MEDICAMENTOS;
+
+      const method = medicamentoSeleccionado?._id ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.message || "No fue posible guardar el medicamento");
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje(
+        medicamentoSeleccionado?._id
+          ? "Medicamento actualizado correctamente"
+          : "Medicamento creado correctamente",
+      );
+
+      setTipoMensaje("success");
+
+      limpiarMedicamento();
+      obtenerMedicamentos();
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error al guardar medicamento");
+      setTipoMensaje("error");
+    }
+  };
+
+  const cambiarEstadoMedicamento = async (medicamento) => {
+    try {
+      const res = await fetch(
+        `${API_MEDICAMENTOS}/${medicamento._id}/estado`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.message || "No fue posible actualizar el estado");
+        setTipoMensaje("error");
+        return;
+      }
+
+      setMensaje(
+        medicamento.estado
+          ? "Medicamento deshabilitado"
+          : "Medicamento habilitado"
+      );
+
+      setTipoMensaje("success");
+
+      obtenerMedicamentos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const usuariosFiltrados = usuarios.filter((u) => {
-    const texto = `${u.username} ${u.nombre} ${u.apellido} ${u.correo}`.toLowerCase();
+    const texto =
+      `${u.username} ${u.nombre} ${u.apellido} ${u.correo}`.toLowerCase();
     return texto.includes(filtro.toLowerCase());
   });
 
   const procedimientosFiltrados = procedimientos.filter((p) => {
-    const texto = `${p.codigo || ""} ${p.nombre || ""} ${p.precio || ""}`.toLowerCase();
+    const texto =
+      `${p.codigo || ""} ${p.nombre || ""} ${p.precio || ""}`.toLowerCase();
     return texto.includes(filtroProcedimiento.toLowerCase());
   });
 
   const consultasFiltradas = consultas.filter((c) => {
-    const texto = `${c.codigo || ""} ${c.nombre || ""} ${c.precio || ""}`.toLowerCase();
+    const texto =
+      `${c.codigo || ""} ${c.nombre || ""} ${c.precio || ""}`.toLowerCase();
     return texto.includes(filtroConsulta.toLowerCase());
   });
 
@@ -792,6 +961,19 @@ export default function Configuracion() {
     return texto.includes(filtroLaboratorio.toLowerCase());
   });
 
+  const medicamentosFiltrados = medicamentos.filter((m) => {
+    const texto = `
+      ${m.codigo || ""}
+      ${m.nombre || ""}
+      ${m.concentracion || ""}
+      ${m.presentacion || ""}
+      ${m.cantidad || ""}
+      ${m.precio || ""}
+    `.toLowerCase();
+
+    return texto.includes(filtroMedicamento.toLowerCase());
+  });
+
   return (
     <div className="configuracion-page">
       {mensaje && (
@@ -802,204 +984,204 @@ export default function Configuracion() {
 
       {tabActiva === "usuarios" && (
         <section className="config-card usuario-card">
-        <div className="usuario-title-bar">
-          <span className="usuario-title-icon">
-            <IconImg name="usuario" alt="Usuario" />
-          </span>
+          <div className="usuario-title-bar">
+            <span className="usuario-title-icon">
+              <IconImg name="usuario" alt="Usuario" />
+            </span>
 
-          <h2>{modoEdicion ? "Usuario seleccionado" : "Crear Usuarios"}</h2>
+            <h2>{modoEdicion ? "Usuario seleccionado" : "Crear Usuarios"}</h2>
 
-          <div className="usuario-title-actions">
-            {modoEdicion && usuarioSeleccionado && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setModoEditarDatos(true)}
-                  title="Editar usuario"
-                >
-                  <IconImg name="editar" alt="Editar" />
-                </button>
+            <div className="usuario-title-actions">
+              {modoEdicion && usuarioSeleccionado && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setModoEditarDatos(true)}
+                    title="Editar usuario"
+                  >
+                    <IconImg name="editar" alt="Editar" />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={abrirPasswordModal}
-                  title="Cambiar contraseña"
-                >
-                  <IconImg name="password" alt="Cambiar contraseña" />
-                </button>
+                  <button
+                    type="button"
+                    onClick={abrirPasswordModal}
+                    title="Cambiar contraseña"
+                  >
+                    <IconImg name="password" alt="Cambiar contraseña" />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => cambiarEstado(usuarioSeleccionado._id)}
-                  title={
-                    usuarioSeleccionado.estado
-                      ? "Bloquear usuario"
-                      : "Desbloquear usuario"
-                  }
-                >
-                  {usuarioSeleccionado.estado ? (
-                    <IconImg name="bloquear" alt="Bloquear" />
-                  ) : (
-                    <IconImg name="desbloquear" alt="Desbloquear" />
-                  )}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => cambiarEstado(usuarioSeleccionado._id)}
+                    title={
+                      usuarioSeleccionado.estado
+                        ? "Bloquear usuario"
+                        : "Desbloquear usuario"
+                    }
+                  >
+                    {usuarioSeleccionado.estado ? (
+                      <IconImg name="bloquear" alt="Bloquear" />
+                    ) : (
+                      <IconImg name="desbloquear" alt="Desbloquear" />
+                    )}
+                  </button>
 
-                <button
-                  type="button"
-                  className="btn-reset-password"
-                  onClick={resetPasswordUsuario}
-                  title="Reset Password"
-                >
-                  <IconImg name="reset-password" alt="Reset Password" />
-                </button>
-              </>
-            )}
+                  <button
+                    type="button"
+                    className="btn-reset-password"
+                    onClick={resetPasswordUsuario}
+                    title="Reset Password"
+                  >
+                    <IconImg name="reset-password" alt="Reset Password" />
+                  </button>
+                </>
+              )}
 
-            <button type="button" onClick={limpiarFormulario} title="Nuevo">
-              <IconImg name="nuevo" alt="Nuevo" />
-            </button>
+              <button type="button" onClick={limpiarFormulario} title="Nuevo">
+                <IconImg name="nuevo" alt="Nuevo" />
+              </button>
 
-            <button type="button" onClick={crearUsuario} title="Guardar">
-              <IconImg name="guardar" alt="Guardar" />
-            </button>
+              <button type="button" onClick={crearUsuario} title="Guardar">
+                <IconImg name="guardar" alt="Guardar" />
+              </button>
 
-            <button type="button" onClick={abrirModal} title="Buscar usuario">
-              <IconImg name="buscar" alt="Buscar" />
-            </button>
+              <button type="button" onClick={abrirModal} title="Buscar usuario">
+                <IconImg name="buscar" alt="Buscar" />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="usuario-form-line">
-          <label>Correo</label>
-          <input
-            name="correo"
-            value={form.correo}
-            onChange={handleChange}
-            placeholder="correo@saludya.com"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Correo</label>
+            <input
+              name="correo"
+              value={form.correo}
+              onChange={handleChange}
+              placeholder="correo@saludya.com"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Nombres</label>
-          <input
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            placeholder="Nombres"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Nombres</label>
+            <input
+              name="nombre"
+              value={form.nombre}
+              onChange={handleChange}
+              placeholder="Nombres"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Apellidos</label>
-          <input
-            name="apellido"
-            value={form.apellido}
-            onChange={handleChange}
-            placeholder="Apellidos"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Apellidos</label>
+            <input
+              name="apellido"
+              value={form.apellido}
+              onChange={handleChange}
+              placeholder="Apellidos"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Teléfono</label>
-          <input
-            name="telefono"
-            value={form.telefono}
-            onChange={handleChange}
-            placeholder="Teléfono"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Teléfono</label>
+            <input
+              name="telefono"
+              value={form.telefono}
+              onChange={handleChange}
+              placeholder="Teléfono"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Nombre Usuario</label>
-          <input
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            placeholder="Usuario"
-            disabled={modoEdicion && !modoEditarDatos}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Nombre Usuario</label>
+            <input
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              placeholder="Usuario"
+              disabled={modoEdicion && !modoEditarDatos}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder={
-              modoEdicion
-                ? "Se cambia desde el botón de contraseña"
-                : "Contraseña"
-            }
-            disabled={modoEdicion}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder={
+                modoEdicion
+                  ? "Se cambia desde el botón de contraseña"
+                  : "Contraseña"
+              }
+              disabled={modoEdicion}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Repetir Password</label>
-          <input
-            type="password"
-            name="repetirPassword"
-            value={form.repetirPassword}
-            onChange={handleChange}
-            placeholder={
-              modoEdicion
-                ? "Se cambia desde el botón de contraseña"
-                : "Repetir contraseña"
-            }
-            disabled={modoEdicion}
-          />
-        </div>
+          <div className="usuario-form-line">
+            <label>Repetir Password</label>
+            <input
+              type="password"
+              name="repetirPassword"
+              value={form.repetirPassword}
+              onChange={handleChange}
+              placeholder={
+                modoEdicion
+                  ? "Se cambia desde el botón de contraseña"
+                  : "Repetir contraseña"
+              }
+              disabled={modoEdicion}
+            />
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Sexo</label>
-          <select
-            name="sexo"
-            value={form.sexo}
-            onChange={handleChange}
-            disabled={modoEdicion && !modoEditarDatos}
-          >
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-          </select>
-        </div>
+          <div className="usuario-form-line">
+            <label>Sexo</label>
+            <select
+              name="sexo"
+              value={form.sexo}
+              onChange={handleChange}
+              disabled={modoEdicion && !modoEditarDatos}
+            >
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Rol</label>
-          <select
-            name="nivelAcceso"
-            value={form.nivelAcceso}
-            onChange={handleChange}
-            disabled={modoEdicion && !modoEditarDatos}
-          >
-            <option value="Administrador">Administrador</option>
-            <option value="Admisión">Admisión</option>
-            <option value="Médico">Médico</option>
-            <option value="Facturación">Facturación</option>
-          </select>
-        </div>
+          <div className="usuario-form-line">
+            <label>Rol</label>
+            <select
+              name="nivelAcceso"
+              value={form.nivelAcceso}
+              onChange={handleChange}
+              disabled={modoEdicion && !modoEditarDatos}
+            >
+              <option value="Administrador">Administrador</option>
+              <option value="Admisión">Admisión</option>
+              <option value="Médico">Médico</option>
+              <option value="Facturación">Facturación</option>
+            </select>
+          </div>
 
-        <div className="usuario-form-line">
-          <label>Estado de la Cuenta</label>
-          <select
-            value={form.estado ? "true" : "false"}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                estado: e.target.value === "true",
-              }))
-            }
-            disabled={modoEdicion}
-          >
-            <option value="true">Activa</option>
-            <option value="false">Desactivada</option>
-          </select>
-        </div>
+          <div className="usuario-form-line">
+            <label>Estado de la Cuenta</label>
+            <select
+              value={form.estado ? "true" : "false"}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  estado: e.target.value === "true",
+                }))
+              }
+              disabled={modoEdicion}
+            >
+              <option value="true">Activa</option>
+              <option value="false">Desactivada</option>
+            </select>
+          </div>
         </section>
       )}
 
@@ -1017,11 +1199,19 @@ export default function Configuracion() {
             </h2>
 
             <div className="proc-title-actions">
-              <button type="button" onClick={limpiarProcedimiento} title="Nuevo">
+              <button
+                type="button"
+                onClick={limpiarProcedimiento}
+                title="Nuevo"
+              >
                 <IconImg name="nuevo" alt="Nuevo" />
               </button>
 
-              <button type="button" onClick={guardarProcedimiento} title="Guardar">
+              <button
+                type="button"
+                onClick={guardarProcedimiento}
+                title="Guardar"
+              >
                 <IconImg name="guardar" alt="Guardar" />
               </button>
             </div>
@@ -1114,7 +1304,9 @@ export default function Configuracion() {
 
                           <button
                             type="button"
-                            className={p.estado ? "proc-btn-disable" : "proc-btn-enable"}
+                            className={
+                              p.estado ? "proc-btn-disable" : "proc-btn-enable"
+                            }
                             onClick={() => cambiarEstadoProcedimiento(p)}
                           >
                             {p.estado ? "Deshabilitar" : "Habilitar"}
@@ -1255,7 +1447,11 @@ export default function Configuracion() {
 
                           <button
                             type="button"
-                            className={c.estado ? "consulta-btn-disable" : "consulta-btn-enable"}
+                            className={
+                              c.estado
+                                ? "consulta-btn-disable"
+                                : "consulta-btn-enable"
+                            }
                             onClick={() => cambiarEstadoConsulta(c)}
                           >
                             {c.estado ? "Deshabilitar" : "Habilitar"}
@@ -1293,7 +1489,11 @@ export default function Configuracion() {
                 <IconImg name="nuevo" alt="Nuevo" />
               </button>
 
-              <button type="button" onClick={guardarLaboratorio} title="Guardar">
+              <button
+                type="button"
+                onClick={guardarLaboratorio}
+                title="Guardar"
+              >
                 <IconImg name="guardar" alt="Guardar" />
               </button>
             </div>
@@ -1386,7 +1586,9 @@ export default function Configuracion() {
 
                           <button
                             type="button"
-                            className={l.estado ? "lab-btn-disable" : "lab-btn-enable"}
+                            className={
+                              l.estado ? "lab-btn-disable" : "lab-btn-enable"
+                            }
                             onClick={() => cambiarEstadoLaboratorio(l)}
                           >
                             {l.estado ? "Deshabilitar" : "Habilitar"}
@@ -1407,10 +1609,173 @@ export default function Configuracion() {
       )}
 
       {tabActiva === "medicamentos" && (
-        <section className="config-card">
-          <div className="config-card-header">
-            <h2>Medicamentos</h2>
-            <span>Este catálogo será desarrollado en el siguiente paso.</span>
+        <section className="med-card">
+          <div className="med-title-bar">
+            <span className="usuario-title-icon">
+              <IconImg name="medicamento" alt="Medicamento" />
+            </span>
+
+            <h2>
+              {medicamentoSeleccionado
+                ? "Editar Medicamento"
+                : "Crear Medicamento"}
+            </h2>
+
+            <div className="med-title-actions">
+              <button type="button" onClick={limpiarMedicamento} title="Nuevo">
+                <IconImg name="nuevo" alt="Nuevo" />
+              </button>
+
+              <button type="button" onClick={guardarMedicamento} title="Guardar">
+                <IconImg name="guardar" alt="Guardar" />
+              </button>
+            </div>
+          </div>
+
+          <div className="med-form-grid">
+            <div className="med-field">
+              <label>Código</label>
+              <input
+                type="text"
+                name="codigo"
+                value={medicamentoForm.codigo}
+                onChange={handleMedicamentoChange}
+                placeholder="Ej: MED001"
+              />
+            </div>
+
+            <div className="med-field">
+              <label>Nombre</label>
+              <input
+                type="text"
+                name="nombre"
+                value={medicamentoForm.nombre}
+                onChange={handleMedicamentoChange}
+                placeholder="Ej: Acetaminofén"
+              />
+            </div>
+
+            <div className="med-field">
+              <label>Concentración</label>
+              <input
+                type="text"
+                name="concentracion"
+                value={medicamentoForm.concentracion}
+                onChange={handleMedicamentoChange}
+                placeholder="Ej: 500 mg"
+              />
+            </div>
+
+            <div className="med-field">
+              <label>Presentación</label>
+              <input
+                type="text"
+                name="presentacion"
+                value={medicamentoForm.presentacion}
+                onChange={handleMedicamentoChange}
+                placeholder="Ej: Tableta"
+              />
+            </div>
+
+            <div className="med-field">
+              <label>Cantidad</label>
+              <input
+                type="number"
+                name="cantidad"
+                value={medicamentoForm.cantidad}
+                onChange={handleMedicamentoChange}
+                placeholder="Cantidad"
+              />
+            </div>
+
+            <div className="med-field">
+              <label>Precio</label>
+              <input
+                type="number"
+                name="precio"
+                value={medicamentoForm.precio}
+                onChange={handleMedicamentoChange}
+                placeholder="Precio"
+              />
+            </div>
+
+            <div className="med-field">
+              <label>Estado</label>
+              <select
+                name="estado"
+                value={medicamentoForm.estado ? "true" : "false"}
+                onChange={handleMedicamentoChange}
+              >
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="med-search">
+            <input
+              placeholder="Buscar por código, nombre, concentración, presentación o precio..."
+              value={filtroMedicamento}
+              onChange={(e) => setFiltroMedicamento(e.target.value)}
+            />
+          </div>
+
+          <div className="med-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Concentración</th>
+                  <th>Presentación</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {medicamentosFiltrados.length > 0 ? (
+                  medicamentosFiltrados.map((m) => (
+                    <tr key={m._id}>
+                      <td>{m.codigo}</td>
+                      <td>{m.nombre}</td>
+                      <td>{m.concentracion}</td>
+                      <td>{m.presentacion}</td>
+                      <td>{m.cantidad}</td>
+                      <td>${Number(m.precio || 0).toLocaleString("es-CO")}</td>
+                      <td>{m.estado ? "Activo" : "Inactivo"}</td>
+                      <td>
+                        <div className="med-table-actions">
+                          <button
+                            type="button"
+                            className="med-btn-edit"
+                            onClick={() => seleccionarMedicamento(m)}
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            type="button"
+                            className={
+                              m.estado ? "med-btn-disable" : "med-btn-enable"
+                            }
+                            onClick={() => cambiarEstadoMedicamento(m)}
+                          >
+                            {m.estado ? "Deshabilitar" : "Habilitar"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8">No hay medicamentos registrados</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </section>
       )}
@@ -1453,7 +1818,10 @@ export default function Configuracion() {
                 onChange={(e) => setFiltro(e.target.value)}
               />
 
-              <button type="button" className="config-btn config-btn--secondary">
+              <button
+                type="button"
+                className="config-btn config-btn--secondary"
+              >
                 <IconImg name="buscar" alt="Buscar" />
                 BUSCAR
               </button>
