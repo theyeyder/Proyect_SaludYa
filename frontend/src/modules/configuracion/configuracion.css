@@ -1730,10 +1730,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #27aeca;
+  background: #07706c;
   color: #ffffff;
   padding: 8px 14px;
-  border-bottom: 1px solid #06b2f7;
+  border-bottom: 1px solid #fbfbfb;
 }
 
 .med-title-bar h2 {
@@ -1797,26 +1797,66 @@
 }
 
 .med-field label {
-  color: #0b4e91;
+  color: #040404;
   font-size: 14px;
   font-weight: 600;
 }
 
-.med-field input,
-.med-field select {
+/* INPUTS DE MEDICAMENTOS */
+
+.med-field input {
   height: 34px;
   border: 1px solid #777;
   border-radius: 5px;
   padding: 4px 8px;
   font-size: 14px;
   background: #ffffff;
+  color: #000000;
 }
 
-.med-field input:focus,
-.med-field select:focus {
+/* SELECTS DE MEDICAMENTOS */
+
+.med-field select {
+  height: 36px;
+  border: 1px solid #1f7875;
+  border-radius: 6px;
+  padding: 4px 10px;
+
+  background: #f8ffff;
+
+  color: #000000;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+ 
+
+  transition: all 0.2s ease;
+}
+
+.med-field input:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.med-field select:hover {
+  border-color: #0c5c59;
+  background: #ffffff;
+}
+
+.med-field select:focus {
+  outline: none;
+  border-color: #07706c;
+  box-shadow: 0 0 0 3px rgba(7, 112, 108, 0.15);
+}
+
+.med-field select option {
+  background: #ffffff;
+  color: #000000;
+  font-size: 14px;
+  padding: 8px;
 }
 
 .med-search {
@@ -1850,7 +1890,7 @@
 }
 
 .med-table th {
-  background: #06d3ea;
+  background: #277976;
   color: #ffffff;
   padding: 10px 8px;
   text-align: left;

@@ -904,12 +904,9 @@ export default function Configuracion() {
 
   const cambiarEstadoMedicamento = async (medicamento) => {
     try {
-      const res = await fetch(
-        `${API_MEDICAMENTOS}/${medicamento._id}/estado`,
-        {
-          method: "PATCH",
-        }
-      );
+      const res = await fetch(`${API_MEDICAMENTOS}/${medicamento._id}/estado`, {
+        method: "PATCH",
+      });
 
       const data = await res.json();
 
@@ -922,7 +919,7 @@ export default function Configuracion() {
       setMensaje(
         medicamento.estado
           ? "Medicamento deshabilitado"
-          : "Medicamento habilitado"
+          : "Medicamento habilitado",
       );
 
       setTipoMensaje("success");
@@ -1626,7 +1623,11 @@ export default function Configuracion() {
                 <IconImg name="nuevo" alt="Nuevo" />
               </button>
 
-              <button type="button" onClick={guardarMedicamento} title="Guardar">
+              <button
+                type="button"
+                onClick={guardarMedicamento}
+                title="Guardar"
+              >
                 <IconImg name="guardar" alt="Guardar" />
               </button>
             </div>
@@ -1657,24 +1658,58 @@ export default function Configuracion() {
 
             <div className="med-field">
               <label>Concentración</label>
-              <input
-                type="text"
+              <select
                 name="concentracion"
                 value={medicamentoForm.concentracion}
                 onChange={handleMedicamentoChange}
-                placeholder="Ej: 500 mg"
-              />
+              >
+                <option value="">Seleccione concentración</option>
+                <option value="5 mg">5 mg</option>
+                <option value="10 mg">10 mg</option>
+                <option value="25 mg">25 mg</option>
+                <option value="50 mg">50 mg</option>
+                <option value="100 mg">100 mg</option>
+                <option value="250 mg">250 mg</option>
+                <option value="500 mg">500 mg</option>
+                <option value="1 g">1 g</option>
+                <option value="5 ml">5 ml</option>
+                <option value="10 ml">10 ml</option>
+                <option value="100 ml">100 ml</option>
+                <option value="250 ml">250 ml</option>
+                <option value="500 ml">500 ml</option>
+                <option value="1%">1%</option>
+                <option value="2%">2%</option>
+                <option value="5%">5%</option>
+                <option value="10%">10%</option>
+              </select>
             </div>
 
             <div className="med-field">
               <label>Presentación</label>
-              <input
-                type="text"
+              <select
                 name="presentacion"
                 value={medicamentoForm.presentacion}
                 onChange={handleMedicamentoChange}
-                placeholder="Ej: Tableta"
-              />
+              >
+                <option value="">Seleccione presentación</option>
+                <option value="Tableta">Tableta</option>
+                <option value="Cápsula">Cápsula</option>
+                <option value="Jarabe">Jarabe</option>
+                <option value="Suspensión">Suspensión</option>
+                <option value="Gotas">Gotas</option>
+                <option value="Ampolla">Ampolla</option>
+                <option value="Inyectable">Inyectable</option>
+                <option value="Crema">Crema</option>
+                <option value="Ungüento">Ungüento</option>
+                <option value="Gel">Gel</option>
+                <option value="Solución oral">Solución oral</option>
+                <option value="Solución inyectable">Solución inyectable</option>
+                <option value="Polvo">Polvo</option>
+                <option value="Sobre">Sobre</option>
+                <option value="Supositorio">Supositorio</option>
+                <option value="Aerosol">Aerosol</option>
+                <option value="Parche">Parche</option>
+              </select>
             </div>
 
             <div className="med-field">
