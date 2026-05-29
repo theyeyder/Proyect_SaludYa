@@ -1504,7 +1504,7 @@ export default function Configuracion() {
                 name="codigo"
                 value={laboratorioForm.codigo}
                 onChange={handleLaboratorioChange}
-                placeholder="Ej: LAB001"
+                placeholder=" LAB001"
               />
             </div>
 
@@ -1515,7 +1515,7 @@ export default function Configuracion() {
                 name="nombre"
                 value={laboratorioForm.nombre}
                 onChange={handleLaboratorioChange}
-                placeholder="Ej: Hemograma"
+                placeholder=" Hemograma"
               />
             </div>
 

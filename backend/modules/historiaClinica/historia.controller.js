@@ -1,11 +1,75 @@
 const service = require("./historia.service");
 
-exports.crearHistoria = async (req, res) => {
-  const historia = await service.crear(req.body);
-  res.status(201).json(historia);
-};
+async function crearHistoria(req, res) {
+  try {
+    const historia = await service.crear(req.body);
 
-exports.obtenerHistorias = async (req, res) => {
-  const historias = await service.listar();
-  res.json(historias);
+    return res.status(201).json({
+      ok: true,
+      data: historia,
+      message: "Historia clínica guardada correctamente",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+}
+
+async function obtenerHistorias(req, res) {
+  try {
+    const historias = await service.listar();
+
+    return res.json({
+      ok: true,
+      data: historias,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+}
+
+async function obtenerHistoriasPorPaciente(req, res) {
+  try {
+    const historias = await service.listarPorPaciente(
+      req.params.pacienteId
+    );
+
+    return res.json({
+      ok: true,
+      data: historias,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+}
+
+async function obtenerHistoriaPorId(req, res) {
+  try {
+    const historia = await service.obtenerPorId(req.params.id);
+
+    return res.json({
+      ok: true,
+      data: historia,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+}
+
+module.exports = {
+  crearHistoria,
+  obtenerHistorias,
+  obtenerHistoriasPorPaciente,
+  obtenerHistoriaPorId,
 };
