@@ -91,6 +91,18 @@ const HistoriaSchema = new mongoose.Schema(
       default: "",
     },
 
+    numeroHistoria: {
+      type: String,
+    },
+
+    numeroIngreso: {
+      type: Number,
+    },
+
+    horaAtencion: {
+      type: String,
+    },
+
     estadoHistoria: {
       type: String,
       enum: ["Abierta", "Cerrada"],
@@ -100,7 +112,7 @@ const HistoriaSchema = new mongoose.Schema(
   {
     timestamps: true,
     collection: "historias_clinicas",
-  }
+  },
 );
 
 module.exports = mongoose.model("HistoriaClinica", HistoriaSchema);

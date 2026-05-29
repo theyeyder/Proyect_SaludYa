@@ -273,3 +273,80 @@
     box-shadow: 0 0 0 rgba(39, 174, 202, 0);
   }
 }
+/* historial de hc medico*/
+/* ================= HISTORIAL CLÍNICO LATERAL ================= */
+
+.hc-top-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 15px;
+  align-items: start;
+}
+
+.hc-paciente-panel {
+  width: 100%;
+}
+
+.hc-side-history {
+  background: #eef9fb;
+  border: 1px solid #0b6f88;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 270px;
+}
+
+.hc-side-header {
+  background: #0b6f88;
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+  padding: 7px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.hc-side-item {
+  margin-bottom: 8px;
+}
+
+.hc-side-link {
+  width: 100%;
+  border: 1px solid #cfd8df;
+  border-radius: 6px;
+  padding: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: left;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hc-side-link:hover {
+  background: #dff5fa;
+}
+
+.hc-side-link span {
+  color: #0b6f88;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.hc-side-link strong {
+  color: #111827;
+  font-size: 13px;
+}
+
+.hc-historial-empty {
+  font-size: 13px;
+  color: #475569;
+  text-align: center;
+  padding: 10px;
+}
+
+@media (max-width: 900px) {
+  .hc-top-layout {
+    grid-template-columns: 1fr;
+  }
+}

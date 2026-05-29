@@ -23,5 +23,14 @@ router.post(
   "/",
   controller.crearHistoria
 );
+router.put(
+  "/:id",
+  controller.actualizarHistoria
+);
+
+router.patch(
+  "/:id/finalizar",
+  controller.finalizarHistoria
+);
 
 module.exports = router;

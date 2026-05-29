@@ -66,10 +66,50 @@ async function obtenerHistoriaPorId(req, res) {
     });
   }
 }
+async function actualizarHistoria(req, res) {
+  try {
+    const historia = await service.actualizar(
+      req.params.id,
+      req.body
+    );
+
+    return res.json({
+      ok: true,
+      data: historia,
+      message: "Historia actualizada correctamente",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+}
+
+async function finalizarHistoria(req, res) {
+  try {
+    const historia = await service.finalizar(
+      req.params.id
+    );
+
+    return res.json({
+      ok: true,
+      data: historia,
+      message: "Historia clínica finalizada",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      message: error.message,
+    });
+  }
+}
 
 module.exports = {
   crearHistoria,
   obtenerHistorias,
   obtenerHistoriasPorPaciente,
   obtenerHistoriaPorId,
+  actualizarHistoria,
+finalizarHistoria,
 };
