@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./historia.css";
+import OrdenesMedicas from "../ordenes/OrdenesMedicas";
 
 const API_CITAS = "http://localhost:4000/api/citas";
 const API_HISTORIAS = "http://localhost:4000/api/historias";
@@ -32,7 +33,8 @@ export default function HistoriaClinica() {
   const [historia, setHistoria] = useState(initialHistoria);
   const [historiaAbierta, setHistoriaAbierta] = useState(null);
   const [historialPaciente, setHistorialPaciente] = useState([]);
-  // Eliminada la variable mostrarHistorial
+  const [mostrarOrdenes, setMostrarOrdenes] = useState(false);
+  const [mostrarHistorial, setMostrarHistorial] = useState(false);
 
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("info");
@@ -95,7 +97,7 @@ export default function HistoriaClinica() {
     setCitaSeleccionada(cita);
     setHistoria(initialHistoria);
     setHistoriaAbierta(null);
-    // Eliminado setMostrarHistorial(false)
+    setMostrarHistorial(false);
 
     await buscarPaciente(cita);
 
@@ -352,7 +354,7 @@ export default function HistoriaClinica() {
     setHistoria(initialHistoria);
     setHistoriaAbierta(null);
     setHistorialPaciente([]);
-    // Eliminado setMostrarHistorial(false)
+    setMostrarHistorial(false);
     obtenerCitasConfirmadas();
   };
 
@@ -444,57 +446,111 @@ export default function HistoriaClinica() {
                 />
               </button>
             </div>
-          </div>
+            
 
-          <div className="hc-section">
-            <h3>Datos del paciente</h3>
+            <div className="hc-layout-historial">
+              <div className="hc-data-grid">
+                <p>
+                  <b>Paciente:</b>{" "}
+                  {paciente?.nombres || citaSeleccionada.nombrePaciente}{" "}
+                  {paciente?.apellidos || ""}
+                </p>
 
-            <div className="hc-top-layout">
-              <div className="hc-paciente-panel">
-                <div className="hc-data-grid">
-                  <p><b>Paciente:</b> {paciente?.nombres || citaSeleccionada.nombrePaciente} {paciente?.apellidos || ""}</p>
-                  <p><b>Documento:</b> {citaSeleccionada.tipoDocumento} {citaSeleccionada.numeroDocumento}</p>
-                  <p><b>Teléfono:</b> {paciente?.telefono || "-"}</p>
-                  <p><b>Dirección:</b> {paciente?.direccion || "-"}</p>
-                  <p><b>Ciudad:</b> {paciente?.ciudad || "-"}</p>
-                  <p><b>Edad:</b> {paciente?.edad || "-"}</p>
-                  <p><b>Sexo:</b> {paciente?.sexo || "-"}</p>
-                  <p><b>Fecha nacimiento:</b> {paciente?.fechaNacimiento || "-"}</p>
-                  <p><b>Correo:</b> {paciente?.correo || "-"}</p>
-                  <p><b>Médico:</b> {citaSeleccionada.nombreMedico}</p>
-                  <p><b>Tipo consulta:</b> {citaSeleccionada.tipoConsulta}</p>
-                  <p><b>Hora cita:</b> {citaSeleccionada.hora}</p>
-                  <p><b>Ingreso actual:</b> {historiaAbierta?.numeroIngreso || historialPaciente.length + 1}</p>
-                  <p><b>Historia clínica:</b> {historiaAbierta?.numeroHistoria || "Pendiente por guardar"}</p>
-                  <p><b>Hora atención:</b> {historiaAbierta?.horaAtencion || "Pendiente por guardar"}</p>
-                  <p><b>Estado HC:</b> {historiaAbierta?.estadoHistoria || "Abierta"}</p>
-                </div>
+                <p>
+                  <b>Documento:</b> {citaSeleccionada.tipoDocumento}{" "}
+                  {citaSeleccionada.numeroDocumento}
+                </p>
+
+                <p>
+                  <b>Teléfono:</b> {paciente?.telefono || "-"}
+                </p>
+
+                <p>
+                  <b>Dirección:</b> {paciente?.direccion || "-"}
+                </p>
+
+                <p>
+                  <b>Ciudad:</b> {paciente?.ciudad || "-"}
+                </p>
+
+                <p>
+                  <b>Edad:</b> {paciente?.edad || "-"}
+                </p>
+
+                <p>
+                  <b>Sexo:</b> {paciente?.sexo || "-"}
+                </p>
+
+                <p>
+                  <b>Fecha nacimiento:</b> {paciente?.fechaNacimiento || "-"}
+                </p>
+
+                <p>
+                  <b>Correo:</b> {paciente?.correo || "-"}
+                </p>
+
+                <p>
+                  <b>Médico:</b> {citaSeleccionada.nombreMedico}
+                </p>
+
+                <p>
+                  <b>Tipo consulta:</b> {citaSeleccionada.tipoConsulta}
+                </p>
+
+                <p>
+                  <b>Hora cita:</b> {citaSeleccionada.hora}
+                </p>
+
+                <p>
+                  <b>Ingreso actual:</b>{" "}
+                  {historiaAbierta?.numeroIngreso ||
+                    historialPaciente.length + 1}
+                </p>
+
+                <p>
+                  <b>Historia clínica:</b>{" "}
+                  {historiaAbierta?.numeroHistoria || "Pendiente por guardar"}
+                </p>
+
+                <p>
+                  <b>Hora atención:</b>{" "}
+                  {historiaAbierta?.horaAtencion || "Pendiente por guardar"}
+                </p>
+
+                <p>
+                  <b>Estado HC:</b>{" "}
+                  {historiaAbierta?.estadoHistoria || "Abierta"}
+                </p>
               </div>
 
-              <aside className="hc-side-history">
-                <div className="hc-side-header">
-                  Historial Clínico
-                </div>
+              {mostrarHistorial && (
+                <div className="hc-top-layout">
+                  <div className="hc-paciente-panel">DATOS PACIENTE</div>
 
-                {historialPaciente.length === 0 ? (
-                  <p className="hc-historial-empty">
-                    No existen historias clínicas anteriores.
-                  </p>
-                ) : (
-                  historialPaciente.map((item) => (
-                    <button
-                      key={item._id}
-                      type="button"
-                      className="hc-side-link"
-                      onClick={() => abrirHistoria(item._id)}
-                      title="Abrir historia clínica"
-                    >
-                      <span>Ingreso #{item.numeroIngreso || "-"}</span>
-                      <strong>{item.numeroHistoria || "HC sin número"}</strong>
-                    </button>
-                  ))
-                )}
-              </aside>
+                  <div className="hc-historial-panel">HISTORIAL CLÍNICO</div>
+                  <div className="hc-historial-panel">
+  <div className="hc-historial-title">
+    Historial Clínico
+  </div>
+
+  {historialPaciente.map((item) => (
+    <div
+      key={item._id}
+      className="hc-historial-card"
+      onClick={() => abrirHistoria(item._id)}
+    >
+      <div className="hc-historial-ingreso">
+        Ingreso #{item.numeroIngreso}
+      </div>
+
+      <div className="hc-historial-hc">
+        {item.numeroHistoria}
+      </div>
+    </div>
+  ))}
+</div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -648,11 +704,24 @@ export default function HistoriaClinica() {
               Finalizar HC
             </button>
 
-            <button type="button" className="hc-btn-secondary">
+            <button
+              type="button"
+              className="hc-btn-secondary"
+              onClick={() => setMostrarOrdenes(true)}
+            >
               Órdenes
             </button>
           </div>
         </section>
+      )}
+
+      {mostrarOrdenes && (
+        <OrdenesMedicas
+          historia={historiaAbierta}
+          paciente={paciente}
+          cita={citaSeleccionada}
+          onClose={() => setMostrarOrdenes(false)}
+        />
       )}
     </div>
   );

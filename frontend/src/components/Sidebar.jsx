@@ -61,7 +61,10 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        <Link className={`sidebar-link ${isActive("/") ? "active" : ""}`} to="/">
+        <Link
+          className={`sidebar-link ${isActive("/") ? "active" : ""}`}
+          to="/"
+        >
           <span className="sidebar-icon">{icon("home")}</span>
           {!collapsed && <span>Inicio</span>}
         </Link>
@@ -185,25 +188,9 @@ export default function Sidebar() {
                   <span className="submenu-dot">○</span>
                   Historia
                 </Link>
-
-                <Link to="/ordenes/formula-medica" className="sidebar-sublink">
+                <Link to="/ordenes-medicas" className="sidebar-sublink">
                   <span className="submenu-dot">○</span>
-                  Fórmula médica
-                </Link>
-
-                <Link to="/ordenes/procedimientos" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span>
-                  Procedimientos
-                </Link>
-
-                <Link to="/ordenes/laboratorios" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span>
-                  Laboratorios
-                </Link>
-
-                <Link to="/ordenes/incapacidades" className="sidebar-sublink">
-                  <span className="submenu-dot">○</span>
-                  Incapacidades
+                  Órdenes Médicas
                 </Link>
               </div>
             )}

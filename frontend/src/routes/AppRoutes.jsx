@@ -8,12 +8,10 @@ import RegistrarPaciente from "../modules/admision/RegistrarPaciente";
 import Configuracion from "../modules/configuracion/Configuracion";
 import AgendarCita from "../modules/citas/AgendarCita";
 import HistoriaClinica from "../modules/historiaClinica/HistoriaClinica";
-import FormulaMedica from "../modules/ordenes/FormulaMedica";
-import Incapacidad from "../modules/ordenes/Incapacidad";
-import Procedimientos from "../modules/ordenes/Procedimientos";
-import Laboratorios from "../modules/ordenes/Laboratorios";
+
 import GenerarFactura from "../modules/facturacion/GenerarFactura";
 import ConsultaDocumentos from "../external/consultaDocumentos/ConsultaDocumentos";
+import OrdenesMedicas from "../modules/ordenes/OrdenesMedicas";
 
 const wrap = (Component, allowedRoles) => (
   <ProtectedRoute allowedRoles={allowedRoles}>
@@ -67,23 +65,8 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/ordenes/formula-medica"
-          element={wrap(FormulaMedica, ["Administrador", "Médico"])}
-        />
-
-        <Route
-          path="/ordenes/incapacidades"
-          element={wrap(Incapacidad, ["Administrador", "Médico"])}
-        />
-
-        <Route
-          path="/ordenes/procedimientos"
-          element={wrap(Procedimientos, ["Administrador", "Médico"])}
-        />
-
-        <Route
-          path="/ordenes/laboratorios"
-          element={wrap(Laboratorios, ["Administrador", "Médico"])}
+          path="/ordenes-medicas"
+          element={wrap(OrdenesMedicas, ["Administrador", "Médico"])}
         />
 
         <Route
