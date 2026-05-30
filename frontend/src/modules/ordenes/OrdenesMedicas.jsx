@@ -24,6 +24,13 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const dragRef = useRef({ active: false, startX: 0, startY: 0 });
 
+  const [posBusqueda, setPosBusqueda] = useState({ x: 0, y: 0 });
+  const dragBusquedaRef = useRef({
+    active: false,
+    startX: 0,
+    startY: 0,
+  });
+
   useEffect(() => {
     cargarDatos();
   }, []);
@@ -63,6 +70,32 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
     document.removeEventListener("mouseup", soltarVentana);
   };
 
+  const iniciarArrastreBusqueda = (e) => {
+    dragBusquedaRef.current = {
+      active: true,
+      startX: e.clientX - posBusqueda.x,
+      startY: e.clientY - posBusqueda.y,
+    };
+
+    document.addEventListener("mousemove", moverVentanaBusqueda);
+    document.addEventListener("mouseup", soltarVentanaBusqueda);
+  };
+
+  const moverVentanaBusqueda = (e) => {
+    if (!dragBusquedaRef.current.active) return;
+
+    setPosBusqueda({
+      x: e.clientX - dragBusquedaRef.current.startX,
+      y: e.clientY - dragBusquedaRef.current.startY,
+    });
+  };
+
+  const soltarVentanaBusqueda = () => {
+    dragBusquedaRef.current.active = false;
+    document.removeEventListener("mousemove", moverVentanaBusqueda);
+    document.removeEventListener("mouseup", soltarVentanaBusqueda);
+  };
+
   const cargarDatos = async () => {
     try {
       const meds = await fetch(API_MEDICAMENTOS).then((r) => r.json());
@@ -82,6 +115,7 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
     setTipoBusqueda(tipo);
     setTextoBusqueda("");
     setOnSeleccionar(() => callback);
+    setPosBusqueda({ x: 0, y: 0 });
     setMostrarBusqueda(true);
   };
 
@@ -120,47 +154,84 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
   };
 
   const guardarOrden = async (tipo, items = [], incapacidad = null) => {
-    if (!cita) {
-      setMensaje("Debe abrir las órdenes desde una historia clínica");
-      return;
+    try {
+      if (!cita) {
+        setMensaje("Debe abrir las órdenes desde una historia clínica");
+        return;
+      }
+
+      if (!cita.pacienteId) {
+        setMensaje("No se encontró el paciente de la cita");
+        return;
+      }
+
+      if (!cita.medicoId) {
+        setMensaje("No se encontró el médico de la cita");
+        return;
+      }
+
+      if (!historia?._id) {
+        setMensaje(
+          "Primero debe guardar la historia clínica antes de generar órdenes"
+        );
+        return;
+      }
+
+      const payload = {
+        tipo,
+        pacienteId: cita.pacienteId,
+        historiaId: historia._id,
+        medicoId: cita.medicoId,
+
+        datosPaciente: {
+          nombres: paciente?.nombres || cita.nombrePaciente || "",
+          apellidos: paciente?.apellidos || "",
+          tipoDocumento: cita.tipoDocumento || "",
+          numeroDocumento: cita.numeroDocumento || "",
+          edad: paciente?.edad || "",
+          sexo: paciente?.sexo || "",
+          telefono: paciente?.telefono || "",
+        },
+
+        datosMedico: {
+          nombreMedico: cita.nombreMedico || "",
+        },
+
+        items,
+        incapacidad,
+        diagnostico: historia?.diagnostico || "",
+        observaciones: "",
+      };
+
+      console.log("ORDEN PAYLOAD", payload);
+
+      const res = await fetch(API_ORDENES, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("ERROR AL GUARDAR ORDEN:", data);
+
+        setMensaje(
+          data.message || "Error al guardar la orden médica"
+        );
+
+        return;
+      }
+
+      setMensaje(
+        data.message || "Orden médica guardada correctamente"
+      );
+    } catch (error) {
+      console.error("ERROR FETCH ORDEN:", error);
+      setMensaje("Error de conexión al guardar la orden médica");
     }
-
-    const payload = {
-      tipo,
-      pacienteId: cita.pacienteId,
-      historiaId: historia?._id || "",
-      medicoId: cita.medicoId,
-
-      datosPaciente: {
-        nombres: paciente?.nombres || cita.nombrePaciente,
-        apellidos: paciente?.apellidos || "",
-        tipoDocumento: cita.tipoDocumento,
-        numeroDocumento: cita.numeroDocumento,
-        edad: paciente?.edad || "",
-        sexo: paciente?.sexo || "",
-        telefono: paciente?.telefono || "",
-      },
-
-      datosMedico: {
-        nombreMedico: cita.nombreMedico,
-      },
-
-      items,
-      incapacidad,
-      diagnostico: historia?.diagnostico || "",
-      observaciones: "",
-    };
-
-    const res = await fetch(API_ORDENES, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    setMensaje(data.message || "Orden guardada correctamente");
   };
 
   return (
@@ -237,13 +308,22 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
 
       {mostrarBusqueda && (
         <div className="orden-busqueda-overlay">
-          <div className="orden-busqueda-card">
-            <div className="orden-busqueda-header">
+          <div
+            className="orden-busqueda-card"
+            style={{
+              transform: `translate(${posBusqueda.x}px, ${posBusqueda.y}px)`,
+            }}
+          >
+            <div
+              className="orden-busqueda-header"
+              onMouseDown={iniciarArrastreBusqueda}
+            >
               <h3>{tituloBusqueda()}</h3>
 
               <button
                 type="button"
                 className="orden-action-btn"
+                onMouseDown={(e) => e.stopPropagation()}
                 onClick={() => setMostrarBusqueda(false)}
                 title="Cerrar"
               >
