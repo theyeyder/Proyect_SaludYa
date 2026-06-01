@@ -3,7 +3,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 
 import Login from "../modules/auth/Login";
-import Home from "../modules/home/home";
+/*import Home from "../modules/home/home";*/
+import Home from "../modules/home/Home";
 import RegistrarPaciente from "../modules/admision/RegistrarPaciente";
 import Configuracion from "../modules/configuracion/Configuracion";
 import AgendarCita from "../modules/citas/AgendarCita";
