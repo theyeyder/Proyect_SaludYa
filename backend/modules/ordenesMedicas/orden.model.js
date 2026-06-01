@@ -49,6 +49,7 @@ const OrdenSchema = new mongoose.Schema(
         dosis: String,
         frecuencia: String,
         duracion: String,
+        viaAdministracion: String,
         observacion: String,
         precio: Number,
       },
@@ -86,7 +87,7 @@ const OrdenSchema = new mongoose.Schema(
   {
     timestamps: true,
     collection: "ordenes_medicas",
-  }
+  },
 );
 
 module.exports = mongoose.model("OrdenMedica", OrdenSchema);

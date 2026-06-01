@@ -4,6 +4,7 @@ import "./citas.css";
 const API_CITAS = "http://localhost:4000/api/citas";
 const API_PACIENTES = "http://localhost:4000/api/pacientes";
 const API_MEDICOS = "http://localhost:4000/api/usuarios";
+const API_TIPOS_CONSULTA = "http://localhost:4000/api/tipos-consulta";
 
 const meses = [
   "Enero",
@@ -28,6 +29,7 @@ export default function AgendarCita() {
   const [anioActual, setAnioActual] = useState(hoy.getFullYear());
   const [citas, setCitas] = useState([]);
   const [medicos, setMedicos] = useState([]);
+  const [tiposConsulta, setTiposConsulta] = useState([]);
 
   const [mesSeleccionado, setMesSeleccionado] = useState(hoy.getMonth());
   const [diaSeleccionado, setDiaSeleccionado] = useState(hoy.getDate());
@@ -106,8 +108,26 @@ export default function AgendarCita() {
     }
   };
 
+  const cargarTiposConsulta = async () => {
+    try {
+      const response = await fetch(API_TIPOS_CONSULTA);
+      const data = await response.json();
+
+      if (data.ok) {
+        const activos = (data.data || []).filter(
+          (consulta) => consulta.estado === true
+        );
+
+        setTiposConsulta(activos);
+      }
+    } catch (error) {
+      console.error("Error al cargar tipos de consulta:", error);
+    }
+  };
+
   useEffect(() => {
     cargarMedicos();
+    cargarTiposConsulta();
   }, []);
 
   useEffect(() => {
@@ -738,13 +758,14 @@ export default function AgendarCita() {
                   value={form.tipoConsulta}
                   onChange={handleChange}
                 >
-                  <option value="">Seleccione</option>
-                  <option value="Consulta general">Consulta general</option>
-                  <option value="Consulta especializada">
-                    Consulta especializada
-                  </option>
-                  <option value="Control médico">Control médico</option>
-                  <option value="Urgencia">Urgencia</option>
+                  <option value="">Seleccione tipo de consulta</option>
+
+                  {tiposConsulta.map((consulta) => (
+                    <option key={consulta._id} value={consulta.nombre}>
+                      {consulta.codigo ? `${consulta.codigo} - ` : ""}
+                      {consulta.nombre}
+                    </option>
+                  ))}
                 </select>
               </div>
 

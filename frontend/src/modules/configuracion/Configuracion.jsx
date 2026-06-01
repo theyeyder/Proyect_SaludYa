@@ -310,7 +310,7 @@ export default function Configuracion() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-
+      
       const data = await res.json();
 
       if (!res.ok) {
@@ -329,7 +329,54 @@ export default function Configuracion() {
       setTipoMensaje("error");
     }
   };
+    const actualizarUsuario = async () => {
+      try {
+        if (!usuarioSeleccionado?._id) {
+          setMensaje("Seleccione un usuario");
+          setTipoMensaje("error");
+          return;
+        }
 
+        const res = await fetch(`${API_URL}/${usuarioSeleccionado._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: form.username,
+            correo: form.correo,
+            telefono: form.telefono,
+            nombre: form.nombre,
+            apellido: form.apellido,
+            sexo: form.sexo,
+            nivelAcceso: form.nivelAcceso,
+            estado: form.estado,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setMensaje(data.message || "No fue posible actualizar el usuario");
+          setTipoMensaje("error");
+          return;
+        }
+
+        setMensaje("Usuario actualizado correctamente");
+        setTipoMensaje("success");
+
+        setUsuarioSeleccionado(data.data);
+
+        obtenerUsuarios();
+
+        setModoEditarDatos(false);
+      } catch (error) {
+        console.error(error);
+
+        setMensaje("Error al actualizar usuario");
+        setTipoMensaje("error");
+      }
+    };
   const guardarCambioPassword = async () => {
     if (!usuarioSeleccionado?._id) return;
 
@@ -1038,7 +1085,11 @@ export default function Configuracion() {
                 <IconImg name="nuevo" alt="Nuevo" />
               </button>
 
-              <button type="button" onClick={crearUsuario} title="Guardar">
+              <button
+                type="button"
+                onClick={modoEditarDatos ? actualizarUsuario : crearUsuario}
+                title="Guardar"
+              >
                 <IconImg name="guardar" alt="Guardar" />
               </button>
 

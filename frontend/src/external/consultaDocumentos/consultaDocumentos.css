@@ -1,0 +1,520 @@
+/* Reset y variables */
+:root {
+  --primary: #0f6b7c;
+  --primary-dark: #0a4d5a;
+  --primary-light: #02d1fa;
+  --secondary: #475569;
+  --success: #0e8c3c;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --bg: #084683;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-light: #000000;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, system-ui, Arial, sans-serif;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e4e9f0 100%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.doc-page {
+  max-width: 1300px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+.doc-card {
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+/* HEADER */
+
+.doc-header {
+  background: linear-gradient(135deg, #ffffff 35%, #eeeef0 60%, #15d6dd 75%);
+  padding: 28px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+}
+
+.doc-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doc-logo-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-logo-img {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+}
+
+.doc-logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-logo-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: rgb(0, 217, 255);
+}
+
+.doc-logo-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgb(0, 217, 255);
+}
+
+.doc-header-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: rgb(0, 217, 255);
+}
+
+.doc-header-title p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: rgb(0, 217, 255);
+}
+
+.doc-header-btn {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-header-btn:hover {
+  background: #0caaca;
+  transform: translateY(-2px);
+}
+
+.doc-header-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* BUSCADOR */
+
+.doc-search {
+  padding: 28px 32px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr 60px;
+  gap: 20px;
+  align-items: center;
+}
+
+.doc-search-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doc-search-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-light);
+}
+
+.doc-search-select,
+.doc-search-input {
+  height: 48px;
+  padding: 0 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  background: rgb(248, 248, 248);
+}
+
+.doc-search-select:focus,
+.doc-search-input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(2, 209, 250, 0.15);
+}
+
+.doc-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+}
+
+.doc-icon-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 10px;
+  background: #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.doc-icon-btn:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+
+.doc-action-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* SPINNER */
+
+.doc-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgb(255, 255, 255);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* MENSAJES */
+
+.doc-message {
+  padding: 16px 32px;
+  font-size: 14px;
+  border-left: 4px solid;
+}
+
+.doc-message-info {
+  background: #ecfdf5;
+  color: #065f46;
+  border-left-color: var(--success);
+}
+
+.doc-message-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-left-color: var(--danger);
+}
+
+/* PACIENTE */
+
+.doc-paciente-card {
+  margin: 20px 32px;
+  background: #1acacaef;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.doc-paciente-header {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.doc-paciente-avatar {
+  width: 64px;
+  height: 64px;
+  background: rgba(245, 245, 245, 0.61);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+.doc-paciente-icon {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.doc-paciente-info h3 {
+ 
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.doc-paciente-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.doc-paciente-badge {
+  font-size: 12px;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 20px;
+  color: var(--text-light);
+  box-shadow: var(--shadow-md);
+}
+
+/* DOCUMENTOS */
+
+.doc-list {
+  padding: 0 32px 32px;
+}
+
+.doc-list-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.doc-list-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.doc-list-count {
+  font-size: 13px;
+  padding: 4px 12px;
+  background: #f8f8f8;
+  border-radius: 20px;
+}
+
+.doc-grid {
+ 
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/*Documentos fact005*/
+.doc-item {
+  background: #18bbb3;
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--primary-light);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: all 0.2s ease;
+}
+
+.doc-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.doc-item-icon {
+  flex-shrink: 0;
+}
+
+.doc-file-icon {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.doc-item-content {
+  flex: 1;
+}
+
+.doc-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.doc-title-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.doc-date {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.doc-desc {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* ACCIONES DOCUMENTO */
+
+.doc-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.doc-icon-action {
+  width: 42px;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.doc-icon-action:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.doc-print {
+  background: #e0f7fa;
+}
+
+.doc-view {
+  background: #eef2ff;
+}
+
+.doc-download-icon {
+  background: #ecfdf5;
+}
+
+/* VACÍO */
+
+.doc-empty {
+  text-align: center;
+  padding: 60px 32px;
+  background: #fafcff;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border);
+}
+
+.doc-empty-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.doc-empty p {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+.doc-empty span {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .doc-search {
+    grid-template-columns: 1fr;
+  }
+
+  .doc-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .doc-page {
+    margin: 16px auto;
+    padding: 0 16px;
+  }
+
+  .doc-header {
+    padding: 20px 24px;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .doc-header-title h1 {
+    font-size: 22px;
+  }
+
+  .doc-paciente-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .doc-list {
+    padding: 0 24px 24px;
+  }
+
+  .doc-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .doc-item-actions {
+    justify-content: center;
+  }
+}

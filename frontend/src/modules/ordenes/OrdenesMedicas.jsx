@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import "./ordenes.css";
 
 const API_ORDENES = "http://localhost:4000/api/ordenes";
@@ -172,8 +173,16 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
 
       if (!historia?._id) {
         setMensaje(
-          "Primero debe guardar la historia clínica antes de generar órdenes"
+          "Primero debe guardar la historia clínica antes de generar órdenes",
         );
+        return;
+      }
+
+      if (
+        tipo !== "incapacidad" &&
+        (!Array.isArray(items) || items.length === 0)
+      ) {
+        setMensaje("Debe agregar al menos un ítem a la orden");
         return;
       }
 
@@ -218,16 +227,12 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
       if (!res.ok) {
         console.error("ERROR AL GUARDAR ORDEN:", data);
 
-        setMensaje(
-          data.message || "Error al guardar la orden médica"
-        );
+        setMensaje(data.message || "Error al guardar la orden médica");
 
         return;
       }
 
-      setMensaje(
-        data.message || "Orden médica guardada correctamente"
-      );
+      setMensaje(data.message || "Orden médica guardada correctamente");
     } catch (error) {
       console.error("ERROR FETCH ORDEN:", error);
       setMensaje("Error de conexión al guardar la orden médica");
@@ -343,7 +348,11 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
                   onChange={(e) => setTextoBusqueda(e.target.value)}
                 />
 
-                <button type="button" className="orden-action-btn" title="Buscar">
+                <button
+                  type="button"
+                  className="orden-action-btn"
+                  title="Buscar"
+                >
                   <img
                     src="/img/icon/buscar.png"
                     alt="Buscar"
@@ -400,27 +409,52 @@ export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
 
 function FormulaTab({ abrirBusqueda, guardarOrden }) {
   const [medSeleccionado, setMedSeleccionado] = useState(null);
+  const [cantidad, setCantidad] = useState("");
   const [dosis, setDosis] = useState("");
   const [frecuencia, setFrecuencia] = useState("");
   const [duracion, setDuracion] = useState("");
+  const [viaAdministracion, setViaAdministracion] = useState("");
+  const [observacion, setObservacion] = useState("");
+  const [items, setItems] = useState([]);
 
-  const guardar = () => {
+  const limpiarCampos = () => {
+    setMedSeleccionado(null);
+    setCantidad("");
+    setDosis("");
+    setFrecuencia("");
+    setDuracion("");
+    setViaAdministracion("");
+    setObservacion("");
+  };
+
+  const agregarMedicamento = () => {
     if (!medSeleccionado) return;
 
-    guardarOrden("formula", [
-      {
-        itemId: medSeleccionado._id,
-        codigo: medSeleccionado.codigo,
-        nombre: medSeleccionado.nombre,
-        concentracion: medSeleccionado.concentracion,
-        presentacion: medSeleccionado.presentacion,
-        cantidad: medSeleccionado.cantidad,
-        precio: medSeleccionado.precio,
-        dosis,
-        frecuencia,
-        duracion,
-      },
-    ]);
+    const item = {
+      itemId: medSeleccionado._id,
+      codigo: medSeleccionado.codigo,
+      nombre: medSeleccionado.nombre,
+      concentracion: medSeleccionado.concentracion,
+      presentacion: medSeleccionado.presentacion,
+      cantidad,
+      precio: medSeleccionado.precio,
+      dosis,
+      frecuencia,
+      duracion,
+      viaAdministracion,
+      observacion,
+    };
+
+    setItems((prev) => [...prev, item]);
+    limpiarCampos();
+  };
+
+  const quitarItem = (index) => {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const guardar = () => {
+    guardarOrden("formula", items);
   };
 
   return (
@@ -459,6 +493,12 @@ function FormulaTab({ abrirBusqueda, guardarOrden }) {
       )}
 
       <input
+        placeholder="Cantidad"
+        value={cantidad}
+        onChange={(e) => setCantidad(e.target.value)}
+      />
+
+      <input
         placeholder="Dosis"
         value={dosis}
         onChange={(e) => setDosis(e.target.value)}
@@ -476,6 +516,47 @@ function FormulaTab({ abrirBusqueda, guardarOrden }) {
         onChange={(e) => setDuracion(e.target.value)}
       />
 
+      <select
+        value={viaAdministracion}
+        onChange={(e) => setViaAdministracion(e.target.value)}
+      >
+        <option value="">Seleccione vía de administración</option>
+        <option value="Oral">Oral</option>
+        <option value="Intramuscular">Intramuscular</option>
+        <option value="Intravenosa">Intravenosa</option>
+        <option value="Subcutánea">Subcutánea</option>
+        <option value="Tópica">Tópica</option>
+        <option value="Oftálmica">Oftálmica</option>
+        <option value="Ótica">Ótica</option>
+        <option value="Nasal">Nasal</option>
+        <option value="Rectal">Rectal</option>
+        <option value="Vaginal">Vaginal</option>
+        <option value="Inhalada">Inhalada</option>
+      </select>
+
+      <textarea
+        placeholder="Observación"
+        value={observacion}
+        onChange={(e) => setObservacion(e.target.value)}
+      />
+
+      <div className="orden-add-container">
+        <button
+          type="button"
+          className="orden-action-btn orden-add-btn"
+          onClick={agregarMedicamento}
+          title="Agregar medicamento"
+        >
+          <img
+            src="/img/icon/agregar.png"
+            alt="Agregar"
+            className="orden-action-icon"
+          />
+        </button>
+      </div>
+
+      <ListaItemsOrden items={items} onRemove={quitarItem} />
+
       <button type="button" className="orden-save-btn" onClick={guardar}>
         <img
           src="/img/icon/guardar.png"
@@ -490,19 +571,39 @@ function FormulaTab({ abrirBusqueda, guardarOrden }) {
 
 function ProcedimientoTab({ abrirBusqueda, guardarOrden }) {
   const [seleccionado, setSeleccionado] = useState(null);
+  const [cantidad, setCantidad] = useState("");
+  const [observacion, setObservacion] = useState("");
+  const [items, setItems] = useState([]);
 
-  const guardar = () => {
+  const limpiarCampos = () => {
+    setSeleccionado(null);
+    setCantidad("");
+    setObservacion("");
+  };
+
+  const agregarProcedimiento = () => {
     if (!seleccionado) return;
 
-    guardarOrden("procedimiento", [
-      {
-        itemId: seleccionado._id,
-        codigo: seleccionado.codigo,
-        nombre: seleccionado.nombre,
-        descripcion: seleccionado.descripcion || seleccionado.nombre,
-        precio: seleccionado.precio,
-      },
-    ]);
+    const item = {
+      itemId: seleccionado._id,
+      codigo: seleccionado.codigo,
+      nombre: seleccionado.nombre,
+      descripcion: seleccionado.descripcion || seleccionado.nombre,
+      precio: seleccionado.precio,
+      cantidad,
+      observacion,
+    };
+
+    setItems((prev) => [...prev, item]);
+    limpiarCampos();
+  };
+
+  const quitarItem = (index) => {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const guardar = () => {
+    guardarOrden("procedimiento", items);
   };
 
   return (
@@ -510,7 +611,11 @@ function ProcedimientoTab({ abrirBusqueda, guardarOrden }) {
       <div className="orden-search">
         <input
           readOnly
-          value={seleccionado ? `${seleccionado.codigo} - ${seleccionado.nombre}` : ""}
+          value={
+            seleccionado
+              ? `${seleccionado.codigo} - ${seleccionado.nombre}`
+              : ""
+          }
           placeholder="Seleccione procedimiento"
         />
 
@@ -534,13 +639,40 @@ function ProcedimientoTab({ abrirBusqueda, guardarOrden }) {
         </div>
       )}
 
+      <input
+        placeholder="Cantidad"
+        value={cantidad}
+        onChange={(e) => setCantidad(e.target.value)}
+      />
+
+      <textarea
+        placeholder="Observación"
+        value={observacion}
+        onChange={(e) => setObservacion(e.target.value)}
+      />
+        <div className="orden-add-container">
+      <button
+        type="button"
+        className="orden-action-btn orden-add-btn"
+        onClick={agregarProcedimiento}
+        title="Agregar procedimiento"
+      >
+        <img
+          src="/img/icon/agregar.png"
+          alt="Agregar procedimiento"
+          className="orden-action-icon"
+        />
+      </button>
+      </div>
+      <ListaItemsOrden items={items} onRemove={quitarItem} />
+
       <button type="button" className="orden-save-btn" onClick={guardar}>
         <img
           src="/img/icon/guardar.png"
           alt="Guardar"
           className="orden-action-icon"
         />
-        Guardar procedimiento
+        Guardar procedimientos
       </button>
     </div>
   );
@@ -548,19 +680,39 @@ function ProcedimientoTab({ abrirBusqueda, guardarOrden }) {
 
 function LaboratorioTab({ abrirBusqueda, guardarOrden }) {
   const [seleccionado, setSeleccionado] = useState(null);
+  const [cantidad, setCantidad] = useState("");
+  const [observacion, setObservacion] = useState("");
+  const [items, setItems] = useState([]);
 
-  const guardar = () => {
+  const limpiarCampos = () => {
+    setSeleccionado(null);
+    setCantidad("");
+    setObservacion("");
+  };
+
+  const agregarLaboratorio = () => {
     if (!seleccionado) return;
 
-    guardarOrden("laboratorio", [
-      {
-        itemId: seleccionado._id,
-        codigo: seleccionado.codigo,
-        nombre: seleccionado.nombre,
-        descripcion: seleccionado.descripcion || seleccionado.nombre,
-        precio: seleccionado.precio,
-      },
-    ]);
+    const item = {
+      itemId: seleccionado._id,
+      codigo: seleccionado.codigo,
+      nombre: seleccionado.nombre,
+      descripcion: seleccionado.descripcion || seleccionado.nombre,
+      precio: seleccionado.precio,
+      cantidad,
+      observacion,
+    };
+
+    setItems((prev) => [...prev, item]);
+    limpiarCampos();
+  };
+
+  const quitarItem = (index) => {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const guardar = () => {
+    guardarOrden("laboratorio", items);
   };
 
   return (
@@ -568,7 +720,11 @@ function LaboratorioTab({ abrirBusqueda, guardarOrden }) {
       <div className="orden-search">
         <input
           readOnly
-          value={seleccionado ? `${seleccionado.codigo} - ${seleccionado.nombre}` : ""}
+          value={
+            seleccionado
+              ? `${seleccionado.codigo} - ${seleccionado.nombre}`
+              : ""
+          }
           placeholder="Seleccione laboratorio"
         />
 
@@ -592,27 +748,110 @@ function LaboratorioTab({ abrirBusqueda, guardarOrden }) {
         </div>
       )}
 
+      <input
+        placeholder="Cantidad"
+        value={cantidad}
+        onChange={(e) => setCantidad(e.target.value)}
+      />
+
+      <textarea
+        placeholder="Observación"
+        value={observacion}
+        onChange={(e) => setObservacion(e.target.value)}
+      />
+
+      <div className="orden-add-container">
+      <button
+        type="button"
+        className="orden-action-btn orden-add-btn"
+        onClick={agregarLaboratorio}
+        title="Agregar laboratorio"
+      >
+        <img
+          src="/img/icon/agregar.png"
+          alt="Agregar laboratorio"
+          className="orden-action-icon"
+        />
+      </button>
+      </div>
+
+      <ListaItemsOrden items={items} onRemove={quitarItem} />
+
       <button type="button" className="orden-save-btn" onClick={guardar}>
         <img
           src="/img/icon/guardar.png"
           alt="Guardar"
           className="orden-action-icon"
         />
-        Guardar laboratorio
+        Guardar laboratorios
       </button>
     </div>
   );
 }
 
+function numeroALetras(num) {
+  const unidades = [
+    "",
+    "uno",
+    "dos",
+    "tres",
+    "cuatro",
+    "cinco",
+    "seis",
+    "siete",
+    "ocho",
+    "nueve",
+    "diez",
+    "once",
+    "doce",
+    "trece",
+    "catorce",
+    "quince",
+    "dieciséis",
+    "diecisiete",
+    "dieciocho",
+    "diecinueve",
+    "veinte",
+    "veintiuno",
+    "veintidós",
+    "veintitrés",
+    "veinticuatro",
+    "veinticinco",
+    "veintiséis",
+    "veintisiete",
+    "veintiocho",
+    "veintinueve",
+    "treinta",
+  ];
+
+  return unidades[num] || String(num);
+}
+
+function calcularDias(fechaInicio, fechaFin) {
+  if (!fechaInicio || !fechaFin) return "";
+
+  const inicio = new Date(fechaInicio);
+  const fin = new Date(fechaFin);
+
+  const diferencia = fin - inicio;
+
+  if (diferencia < 0) return "";
+
+  return Math.floor(diferencia / (1000 * 60 * 60 * 24)) + 1;
+}
+
 function IncapacidadTab({ guardarOrden }) {
-  const [dias, setDias] = useState("");
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [motivo, setMotivo] = useState("");
 
+  const dias = calcularDias(fechaInicio, fechaFin);
+  const diasLetras = dias ? numeroALetras(dias) : "";
+
   const guardar = () => {
     guardarOrden("incapacidad", [], {
-      dias,
+      dias: String(dias || ""),
+      diasLetras,
       fechaInicio,
       fechaFin,
       motivo,
@@ -621,22 +860,34 @@ function IncapacidadTab({ guardarOrden }) {
 
   return (
     <div className="orden-form">
-      <input
-        placeholder="Días"
-        value={dias}
-        onChange={(e) => setDias(e.target.value)}
-      />
+      <div className="orden-fechas-grid">
+        <label>
+          Fecha inicio
+          <input
+            type="date"
+            value={fechaInicio}
+            onChange={(e) => setFechaInicio(e.target.value)}
+          />
+        </label>
+
+        <label>
+          Fecha final
+          <input
+            type="date"
+            value={fechaFin}
+            onChange={(e) => setFechaFin(e.target.value)}
+          />
+        </label>
+      </div>
 
       <input
-        type="date"
-        value={fechaInicio}
-        onChange={(e) => setFechaInicio(e.target.value)}
-      />
-
-      <input
-        type="date"
-        value={fechaFin}
-        onChange={(e) => setFechaFin(e.target.value)}
+        readOnly
+        value={
+          dias
+            ? `${dias} días (${diasLetras} días)`
+            : ""
+        }
+        placeholder="Días calculados"
       />
 
       <textarea
@@ -645,7 +896,11 @@ function IncapacidadTab({ guardarOrden }) {
         onChange={(e) => setMotivo(e.target.value)}
       />
 
-      <button type="button" className="orden-save-btn" onClick={guardar}>
+      <button
+        type="button"
+        className="orden-save-btn"
+        onClick={guardar}
+      >
         <img
           src="/img/icon/guardar.png"
           alt="Guardar"
@@ -653,6 +908,57 @@ function IncapacidadTab({ guardarOrden }) {
         />
         Guardar incapacidad
       </button>
+    </div>
+  );
+}
+
+function ListaItemsOrden({ items, onRemove }) {
+  if (!items.length) {
+    return null;
+  }
+
+  return (
+    <div className="orden-items-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Detalle</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {items.map((item, index) => (
+            <tr key={`${item.itemId}-${index}`}>
+              <td>{item.codigo}</td>
+              <td>{item.nombre}</td>
+              <td>{item.cantidad || "-"}</td>
+              <td>
+                {item.viaAdministracion
+                  ? `Vía: ${item.viaAdministracion}. `
+                  : ""}
+                {item.dosis ? `Dosis: ${item.dosis}. ` : ""}
+                {item.frecuencia ? `Frecuencia: ${item.frecuencia}. ` : ""}
+                {item.duracion ? `Duración: ${item.duracion}. ` : ""}
+                {item.observacion || ""}
+              </td>
+              <td>
+                <button
+                  type="button"
+                  className="orden-remove-btn"
+                  onClick={() => onRemove(index)}
+                  title="Quitar"
+                >
+                  X
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

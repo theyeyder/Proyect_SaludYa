@@ -35,6 +35,20 @@ export default function HistoriaClinica() {
   const [historialPaciente, setHistorialPaciente] = useState([]);
   const [mostrarHistorial, setMostrarHistorial] = useState(false);
   const [mostrarOrdenes, setMostrarOrdenes] = useState(false);
+  
+  const [fechaInicial, setFechaInicial] = useState(
+  new Date().toISOString().split("T")[0]
+);
+
+const [fechaFinal, setFechaFinal] = useState(
+  new Date().toISOString().split("T")[0]
+);
+
+const [vistaHistorias, setVistaHistorias] =
+  useState("pendientes");
+
+const [mostrarMenuVista, setMostrarMenuVista] =
+  useState(false);
 
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("info");
@@ -426,6 +440,7 @@ export default function HistoriaClinica() {
           </div>
         </section>
       )}
+      
 
       {citaSeleccionada && (
         <section className="hc-card">

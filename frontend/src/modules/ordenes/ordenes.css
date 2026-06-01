@@ -307,3 +307,89 @@
 .orden-row-select td {
   padding: 10px;
 }
+/* Botón agregar */
+
+.orden-add-btn {
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid #0b6f88;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  animation: ordenAddPulse 1.2s infinite;
+
+  box-shadow:
+    0 0 8px rgba(39, 174, 202, 0.5);
+}
+
+.orden-add-btn:hover {
+  animation-play-state: paused;
+
+  transform: scale(1.12);
+}
+
+@keyframes ordenAddPulse {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 rgba(39, 174, 202, 0),
+      0 0 8px rgba(39, 174, 202, 0.5);
+  }
+
+  50% {
+    transform: scale(1.15);
+    box-shadow:
+      0 0 18px rgba(39, 174, 202, 0.9),
+      0 0 30px rgba(39, 174, 202, 0.4);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 rgba(39, 174, 202, 0),
+      0 0 8px rgba(39, 174, 202, 0.5);
+  }
+}
+
+/*ordenes contaniner boton agregar*/
+.orden-add-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 18px 0;
+}
+
+.orden-add-btn {
+  width: 52px;
+  height: 52px;
+
+  border: 1px solid #0b6f88;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  animation: ordenAddPulse 1.2s infinite;
+
+  box-shadow:
+    0 0 10px rgba(39, 174, 202, 0.5);
+}
+
+.orden-add-btn .orden-action-icon {
+  width: 28px;
+  height: 28px;
+}
+
