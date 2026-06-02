@@ -149,7 +149,7 @@ export default function Sidebar() {
             className={`sidebar-link ${isActive("/citas") ? "active" : ""}`}
             to="/citas"
           >
-            <span className="sidebar-icon">{icon("citas")}</span>
+            <span className="sidebar-icon">{icon("Citas")}</span>
             {!collapsed && <span>Citas</span>}
           </Link>
         )}

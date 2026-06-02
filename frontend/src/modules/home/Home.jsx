@@ -58,7 +58,7 @@ admision: {
 citas: {
   titulo: "Citas",
   ruta: "/citas",
-  img: "/img/icon/citas.png",
+  img: "/img/icon/Citas.png",
 },
 
 historia: {
