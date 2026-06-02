@@ -17,7 +17,7 @@ const tipoConsultaRoutes = require(
 );
 
 const laboratorioRoutes = require(
-  "./modules/configuracion/Laboratorio/laboratorio.routes"
+  "./modules/configuracion/laboratorio/laboratorio.routes"
 );
 
 const medicamentoRoutes = require(
