@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:4000/api/usuarios";
+const BASE_URL = "https://proyect-saludya-backend.onrender.com/api/usuarios";
 
 export async function crearUsuario(data) {
   const response = await fetch(BASE_URL, {

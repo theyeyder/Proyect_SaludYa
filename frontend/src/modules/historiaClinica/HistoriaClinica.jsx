@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import "./historia.css";
 import OrdenesMedicas from "../ordenes/OrdenesMedicas";
 
-const API_CITAS = "http://localhost:4000/api/citas";
-const API_HISTORIAS = "http://localhost:4000/api/historias";
-const API_PACIENTES = "http://localhost:4000/api/pacientes";
+const API_CITAS = "https://proyect-saludya-backend.onrender.com/api/citas";
+const API_HISTORIAS = "https://proyect-saludya-backend.onrender.com/api/historias";
+const API_PACIENTES = "https://proyect-saludya-backend.onrender.com/api/pacientes";
 
 const initialHistoria = {
   peso: "",

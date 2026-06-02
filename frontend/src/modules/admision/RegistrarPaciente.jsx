@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_URL = "http://localhost:4000/api/pacientes";
+const API_URL = "https://proyect-saludya-backend.onrender.com/api/pacientes";
 
 const initialForm = {
   nombres: "",

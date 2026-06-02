@@ -16,7 +16,7 @@ app.get("/", (req,res)=>{
 });
 
 app.listen(4000, ()=>{
-  console.log("Servidor en http://localhost:4000");
+  console.log("Servidor en https://proyect-saludya-backend.onrender.com");
 });
 */
 

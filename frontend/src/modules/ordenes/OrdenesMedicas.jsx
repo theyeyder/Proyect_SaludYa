@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import "./ordenes.css";
 
-const API_ORDENES = "http://localhost:4000/api/ordenes";
-const API_MEDICAMENTOS = "http://localhost:4000/api/medicamentos";
-const API_PROCEDIMIENTOS = "http://localhost:4000/api/procedimientos";
-const API_LABORATORIOS = "http://localhost:4000/api/laboratorios";
+const API_ORDENES = "https://proyect-saludya-backend.onrender.com/api/ordenes";
+const API_MEDICAMENTOS = "https://proyect-saludya-backend.onrender.com/api/medicamentos";
+const API_PROCEDIMIENTOS = "https://proyect-saludya-backend.onrender.com/api/procedimientos";
+const API_LABORATORIOS = "https://proyect-saludya-backend.onrender.com/api/laboratorios";
 
 export default function OrdenesMedicas({ historia, paciente, cita, onClose }) {
   const navigate = useNavigate();

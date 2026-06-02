@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./configuracion.css";
 
-const API_URL = "http://localhost:4000/api/usuarios";
-const API_PROCEDIMIENTOS = "http://localhost:4000/api/procedimientos";
-const API_TIPOS_CONSULTA = "http://localhost:4000/api/tipos-consulta";
-const API_LABORATORIOS = "http://localhost:4000/api/laboratorios";
-const API_MEDICAMENTOS = "http://localhost:4000/api/medicamentos";
+const API_URL = "https://proyect-saludya-backend.onrender.com/api/usuarios";
+const API_PROCEDIMIENTOS = "https://proyect-saludya-backend.onrender.com/api/procedimientos";
+const API_TIPOS_CONSULTA = "https://proyect-saludya-backend.onrender.com/api/tipos-consulta";
+const API_LABORATORIOS = "https://proyect-saludya-backend.onrender.com/api/laboratorios";
+const API_MEDICAMENTOS = "https://proyect-saludya-backend.onrender.com/api/medicamentos";
 
 const initialForm = {
   username: "",

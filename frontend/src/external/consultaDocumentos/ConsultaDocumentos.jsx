@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./consultaDocumentos.css";
 
-const API_DOCUMENTOS = "http://localhost:4000/api/documentos";
-const API_PACIENTES = "http://localhost:4000/api/pacientes";
+const API_DOCUMENTOS = "https://proyect-saludya-backend.onrender.com/api/documentos";
+const API_PACIENTES = "https://proyect-saludya-backend.onrender.com/api/pacientes";
 
 export default function ConsultaDocumentos() {
   const [tipoDocumento, setTipoDocumento] = useState("CC");
@@ -56,7 +56,7 @@ export default function ConsultaDocumentos() {
 
     return archivoUrl.startsWith("http")
       ? archivoUrl
-      : `http://localhost:4000${archivoUrl}`;
+      : `https://proyect-saludya-backend.onrender.com${archivoUrl}`;
   };
 
   const abrirDocumento = (archivoUrl) => {

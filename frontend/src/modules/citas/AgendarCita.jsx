@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import "./citas.css";
 
-const API_CITAS = "http://localhost:4000/api/citas";
-const API_PACIENTES = "http://localhost:4000/api/pacientes";
-const API_MEDICOS = "http://localhost:4000/api/usuarios";
-const API_TIPOS_CONSULTA = "http://localhost:4000/api/tipos-consulta";
+const API_CITAS = "https://proyect-saludya-backend.onrender.com/api/citas";
+const API_PACIENTES = "https://proyect-saludya-backend.onrender.com/api/pacientes";
+const API_MEDICOS = "https://proyect-saludya-backend.onrender.com/api/usuarios";
+const API_TIPOS_CONSULTA = "https://proyect-saludya-backend.onrender.com/api/tipos-consulta";
 
 const meses = [
   "Enero",

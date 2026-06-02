@@ -1,5 +1,5 @@
 /*
-const BASE_URL = "http://localhost:4000/api/auth";
+const BASE_URL = "https://proyect-saludya-backend.onrender.com/api/auth";
 
 export async function login(data) {
   const response = await fetch(`${BASE_URL}/login`, {
@@ -14,7 +14,7 @@ export async function login(data) {
   return result;
 }
   */
- const BASE_URL = "http://localhost:4000/api/auth";
+ const BASE_URL = "https://proyect-saludya-backend.onrender.com/api/auth";
 
 export async function login(data) {
   const response = await fetch(`${BASE_URL}/login`, {

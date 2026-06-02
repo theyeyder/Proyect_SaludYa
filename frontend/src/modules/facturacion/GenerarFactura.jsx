@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./facturacion.css";
 
-const API_PACIENTES = "http://localhost:4000/api/pacientes";
-const API_ORDENES = "http://localhost:4000/api/ordenes";
-const API_FACTURAS = "http://localhost:4000/api/facturas";
-const API_CITAS = "http://localhost:4000/api/citas";
+const API_PACIENTES = "https://proyect-saludya-backend.onrender.com/api/pacientes";
+const API_ORDENES = "https://proyect-saludya-backend.onrender.com/api/ordenes";
+const API_FACTURAS = "https://proyect-saludya-backend.onrender.com/api/facturas";
+const API_CITAS = "https://proyect-saludya-backend.onrender.com/api/citas";
 
 const fechaHoy = () => new Date().toISOString().slice(0, 10);
 

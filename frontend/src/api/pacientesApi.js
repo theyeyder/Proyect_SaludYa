@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:4000/api/pacientes";
+const BASE_URL = "https://proyect-saludya-backend.onrender.com/api/pacientes";
 
 export async function crearPaciente(data) {
   const response = await fetch(BASE_URL, {
