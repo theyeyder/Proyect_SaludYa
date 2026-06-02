@@ -139,7 +139,7 @@ export default function Sidebar() {
             className={`sidebar-link ${isActive("/admision") ? "active" : ""}`}
             to="/admision"
           >
-            <span className="sidebar-icon">{icon("admision")}</span>
+            <span className="sidebar-icon">{icon("admisiones")}</span>
             {!collapsed && <span>Admisión</span>}
           </Link>
         )}
@@ -166,7 +166,7 @@ export default function Sidebar() {
               onClick={() => toggleMenu("historia")}
               type="button"
             >
-              <span className="sidebar-icon">{icon("historia")}</span>
+              <span className="sidebar-icon">{icon("historiaclinica")}</span>
 
               {!collapsed && (
                 <>

@@ -44,40 +44,40 @@ const modulosPorRol = {
 const modulos = {
 
   configuracion: {
-    titulo: "Configuración",
-    ruta: "/configuracion",
-    img: "/img/configuracion.png",
-  },
+  titulo: "Configuración",
+  ruta: "/configuracion",
+  img: "/img/icon/configuracion.png",
+},
 
-  admision: {
-    titulo: "Admisión",
-    ruta: "/admision",
-    img: "/img/admisiones.png",
-  },
+admision: {
+  titulo: "Admisión",
+  ruta: "/admision",
+  img: "/img/icon/admisiones.png",
+},
 
-  citas: {
-    titulo: "Citas",
-    ruta: "/citas",
-    img: "/img/citas.png",
-  },
+citas: {
+  titulo: "Citas",
+  ruta: "/citas",
+  img: "/img/icon/citas.png",
+},
 
-  historia: {
-    titulo: "Historia Clínica",
-    ruta: "/historia-clinica",
-    img: "/img/historiaclinica.png",
-  },
+historia: {
+  titulo: "Historia Clínica",
+  ruta: "/historia-clinica",
+  img: "/img/icon/historiaclinica.png",
+},
 
-  facturacion: {
-    titulo: "Facturación",
-    ruta: "/facturacion",
-    img: "/img/facturacion.png",
-  },
+facturacion: {
+  titulo: "Facturación",
+  ruta: "/facturacion",
+  img: "/img/icon/facturacion.png",
+},
 
-  documentos: {
-    titulo: "Consulta Documentos",
-    ruta: "/consulta-documentos",
-    img: "/img/documentos.png",
-  },
+documentos: {
+  titulo: "Consulta Documentos",
+  ruta: "/consulta-documentos",
+  img: "/img/icon/documentos.png",
+},
 
 };
 
