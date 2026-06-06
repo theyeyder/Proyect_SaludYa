@@ -424,7 +424,7 @@ https://proyect-saludya-backend.onrender.com
 
 ---
 
-# 13. Conclusión SALUDYA
+# 13. ConclusióN
 
 Las pruebas implementadas permiten validar el correcto funcionamiento del MVP SaludYa. Con Jest se verifican funciones internas del backend, con Supertest se comprueba la comunicación con endpoints principales de la API y con Playwright se valida el comportamiento completo del sistema desde la perspectiva del usuario.
 
