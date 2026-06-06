@@ -11,6 +11,8 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.5.0",
-    "pdfkit": "^0.18.0"
+    "pdfkit": "^0.18.0",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }
