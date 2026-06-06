@@ -1,0 +1,1 @@
+export async function buscarDocumentos(tipoDocumento, numeroDocumento){ return fetch(`/api/documentos/${tipoDocumento}/${numeroDocumento}`); }

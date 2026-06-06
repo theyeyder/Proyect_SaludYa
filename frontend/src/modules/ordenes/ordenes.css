@@ -1,0 +1,395 @@
+.orden-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orden-card {
+  width: 850px;
+  max-width: 95vw;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.orden-header {
+  background: #27aeca;
+  color: white;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orden-header h2 {
+  margin: 0;
+}
+
+.orden-header button {
+  width: 34px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.orden-alert {
+  padding: 10px;
+  background: #d1fae5;
+  color: #0b9c73;
+  font-weight: 600;
+}
+
+.orden-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: #f8fafc;
+}
+
+.orden-tabs button {
+  border: none;
+  background: #0b6f88;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.orden-form {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.orden-form input,
+.orden-form select,
+.orden-form textarea {
+  height: 36px;
+  border: 1px solid #777;
+  border-radius: 6px;
+  padding: 6px 9px;
+}
+
+.orden-form textarea {
+  height: 90px;
+}
+
+.orden-form button {
+  background: #ffffff;
+  color: rgba(25, 172, 164, 0.973);
+  border: none;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/*Cerrar Boton*/
+.orden-action-btn {
+  width: 36px;
+  height: 34px;
+
+  border: 1px solid #6f7f88;
+  border-radius: 7px;
+
+  background: #f4f7fa;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  transition: all 0.2s ease;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 1px 3px rgba(0,0,0,0.18);
+}
+
+.orden-action-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.orden-action-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/*bUSCAR*/
+.orden-header {
+  cursor: move;
+  user-select: none;
+}
+
+.orden-action-btn {
+  width: 36px;
+  height: 34px;
+  border: 1px solid #6f7f88;
+  border-radius: 7px;
+  background: #f4f7fa;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 1px 3px rgba(0,0,0,0.18);
+}
+
+.orden-action-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.orden-action-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.orden-search {
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  gap: 8px;
+}
+
+.orden-list {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #dbe3ea;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.orden-list-item {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+  padding: 9px 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.orden-list-item:hover {
+  background: #e6f5fb;
+}
+
+.orden-selected {
+  background: #e0f7fa;
+  border: 1px solid #27aeca;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.orden-save-btn {
+  background: #0b6f88;
+  color: white;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+/* ================= MODAL BUSQUEDA ================= */
+
+.orden-busqueda-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.orden-busqueda-card {
+  width: 900px;
+  max-width: 95vw;
+  max-height: 80vh;
+  overflow: hidden;
+
+  background: white;
+  border-radius: 10px;
+
+  box-shadow: 0 15px 30px rgba(0,0,0,.25);
+}
+
+.orden-busqueda-header {
+  background: #27aeca;
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 14px;
+}
+
+.orden-busqueda-header h3 {
+  margin: 0;
+}
+
+.orden-busqueda-body {
+  padding: 12px;
+}
+
+.orden-busqueda-filtro {
+  display: grid;
+  grid-template-columns: 1fr 45px;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.orden-busqueda-tabla {
+  max-height: 450px;
+  overflow-y: auto;
+  border: 1px solid #dbe3ea;
+}
+
+.orden-busqueda-tabla table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orden-busqueda-tabla th {
+  background: #0b6f88;
+  color: white;
+  padding: 10px;
+  text-align: left;
+}
+
+.orden-busqueda-tabla td {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orden-select-btn {
+  background: #0b6f88;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.orden-select-btn:hover {
+  filter: brightness(1.05);
+}
+.orden-row-select {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.orden-row-select:hover {
+  background: #dff5fa;
+}
+
+.orden-row-select td {
+  padding: 10px;
+}
+/* Botón agregar */
+
+.orden-add-btn {
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid #0b6f88;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  animation: ordenAddPulse 1.2s infinite;
+
+  box-shadow:
+    0 0 8px rgba(39, 174, 202, 0.5);
+}
+
+.orden-add-btn:hover {
+  animation-play-state: paused;
+
+  transform: scale(1.12);
+}
+
+@keyframes ordenAddPulse {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 rgba(39, 174, 202, 0),
+      0 0 8px rgba(39, 174, 202, 0.5);
+  }
+
+  50% {
+    transform: scale(1.15);
+    box-shadow:
+      0 0 18px rgba(39, 174, 202, 0.9),
+      0 0 30px rgba(39, 174, 202, 0.4);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 rgba(39, 174, 202, 0),
+      0 0 8px rgba(39, 174, 202, 0.5);
+  }
+}
+
+/*ordenes contaniner boton agregar*/
+.orden-add-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 18px 0;
+}
+
+.orden-add-btn {
+  width: 52px;
+  height: 52px;
+
+  border: 1px solid #0b6f88;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  animation: ordenAddPulse 1.2s infinite;
+
+  box-shadow:
+    0 0 10px rgba(39, 174, 202, 0.5);
+}
+
+.orden-add-btn .orden-action-icon {
+  width: 28px;
+  height: 28px;
+}
+

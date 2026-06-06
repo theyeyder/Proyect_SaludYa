@@ -1,0 +1,406 @@
+/* ===== ADMISIÓN - REGISTRAR PACIENTES ===== */
+/* Variables de diseño */
+:root {
+  --primary: #153b50;
+  --primary-dark: #0f2c3b;
+  --primary-light: #eef6ff;
+  --secondary: #eef2f5;
+  --secondary-dark: #dde5ea;
+  --text-primary: #1a2c3e;
+  --text-secondary: #5b6e8c;
+  --text-muted: #8895aa;
+  --border: #e2e8f0;
+  --border-focus: #391ded;
+  --bg-card: #fdfdfd;
+  --bg-page: #f4f7fb;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --transition: all 0.2s ease;
+}
+
+/* Reset y base */
+* {
+  box-sizing: border-box;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.admision-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--bg-page);
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.admision-header {
+  margin-bottom: 4px;
+}
+
+.admision-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.3px;
+}
+
+.admision-header p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ===== ALERTAS ===== */
+.admision-alert {
+  background: var(--primary-light);
+  border: 1px solid #fa0101;
+  border-left: 4px solid var(--primary);
+  color: var(--primary);
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== GRID PRINCIPAL ===== */
+.admision-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+/* ===== TARJETAS ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-header span {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== FORMULARIO ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.form-group label::after {
+  content: "";
+  display: inline-block;
+}
+
+.form-group label.required::before {
+  content: "*";
+  color: #dc2626;
+  margin-right: 4px;
+}
+
+/* Campos de entrada */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  font-size: 14px;
+  font-family: inherit;
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: var(--text-muted);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(21, 59, 80, 0.1);
+}
+
+.form-group input:read-only,
+.form-group input:disabled {
+  background-color: #ffffff;
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Radio group */
+.radio-group {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  text-transform: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+/* ===== BOTONES ===== */
+.actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 40px;
+  padding: 10px 22px;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(21, 59, 80, 0.2);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--secondary-dark);
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== BÚSQUEDA ===== */
+.search-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.search-box select,
+.search-box input {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--bg-card);
+  transition: var(--transition);
+}
+
+.search-box select:focus,
+.search-box input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(21, 59, 80, 0.1);
+}
+
+.search-box .btn {
+  padding: 10px 20px;
+}
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .admision-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .admision-page {
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .admision-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions .btn {
+    width: 100%;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box select,
+  .search-box input,
+  .search-box .btn {
+    width: 100%;
+  }
+
+  .admision-header h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admision-page {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* ===== UTILIDADES ===== */
+.text-center {
+  text-align: center;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+/* ===== FONDO GLOBAL ===== */
+body {
+  margin: 0;
+  padding: 0;
+  background: url("/img/fondo-saludya.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Capa blanca suave encima */
+.app-overlay {
+  min-height: 100vh;
+  /*background: rgba(255, 255, 255, 0.21);*/
+}
+

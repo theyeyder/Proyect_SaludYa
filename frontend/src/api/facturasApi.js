@@ -1,0 +1,1 @@
+export async function listarFacturas(){ return fetch('/api/facturas'); }

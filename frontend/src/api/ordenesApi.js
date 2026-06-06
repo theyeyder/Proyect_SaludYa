@@ -1,0 +1,1 @@
+export async function listarOrdenes(){ return fetch('/api/ordenes'); }

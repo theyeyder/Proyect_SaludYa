@@ -1,0 +1,597 @@
+:root {
+  --hc-primary: #27aeca;
+  --hc-primary-dark: #0b6f88;
+  --hc-success: #0e8c3c;
+  --hc-danger: #dc2626;
+  --hc-bg: #f3f8fb;
+  --hc-card: #ffffff;
+  --hc-border: #dbe3ea;
+  --hc-text: #1f2937;
+  --hc-muted: #6b7280;
+}
+
+.historia-page {
+  padding: 22px;
+  background: var(--hc-bg);
+  min-height: 100vh;
+}
+
+.historia-alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  font-weight: 600;
+  border-left: 5px solid transparent;
+}
+
+.historia-alert--success {
+  background: #d1fae5;
+  color: #065f46;
+  border-left-color: var(--hc-success);
+}
+
+.historia-alert--error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-left-color: var(--hc-danger);
+}
+
+.historia-alert--info {
+  background: #dbeafe;
+  color: #1e40af;
+  border-left-color: #3b82f6;
+}
+
+.hc-card {
+  background: var(--hc-card);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--hc-border);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.hc-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--hc-primary);
+  color: #ffffff;
+  padding: 10px 16px;
+  border-bottom: 1px solid #06b2f7;
+}
+
+.hc-title-bar h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.hc-table {
+  max-height: 460px;
+  overflow: auto;
+}
+
+.hc-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.hc-table th {
+  background: #06d3ea;
+  color: #ffffff;
+  padding: 10px 8px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+}
+
+.hc-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  color: var(--hc-text);
+  font-size: 14px;
+}
+
+.hc-table tr:nth-child(even) {
+  background: #f3f8fb;
+}
+
+.hc-table tr:hover {
+  background: #e6f5fb;
+}
+
+.hc-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--hc-border);
+}
+
+.hc-section h3 {
+  margin: 0 0 12px;
+  color: var(--hc-primary-dark);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.hc-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.hc-data-grid p {
+  margin: 0;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  color: var(--hc-text);
+  font-size: 14px;
+}
+
+.hc-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.hc-form-grid input,
+.hc-section textarea {
+  width: 100%;
+  border: 1px solid #777;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #111827;
+}
+
+.hc-form-grid input {
+  height: 36px;
+}
+
+.hc-section textarea {
+  min-height: 82px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.hc-form-grid input:focus,
+.hc-section textarea:focus {
+  outline: none;
+  border-color: var(--hc-primary);
+  box-shadow: 0 0 0 3px rgba(39, 174, 202, 0.16);
+}
+
+.hc-actions {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #f8fafc;
+}
+
+.hc-btn-primary,
+.hc-btn-secondary {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.hc-btn-primary {
+  background: var(--hc-primary-dark);
+}
+
+.hc-btn-secondary {
+  background: #475569;
+}
+
+.hc-btn-primary:hover,
+.hc-btn-secondary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+@media (max-width: 768px) {
+  .historia-page {
+    padding: 12px;
+  }
+
+  .hc-title-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .hc-actions {
+    flex-direction: column;
+  }
+
+  .hc-btn-primary,
+  .hc-btn-secondary {
+    width: 100%;
+  }
+}
+/* Boton HC */
+.hc-action-btn {
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid #6f7f88;
+  border-radius: 7px;
+
+  background: #f4f7fa;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  transition: all 0.2s ease;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 1px 3px rgba(0,0,0,0.18);
+}
+
+.hc-action-btn:hover {
+  background: #e0e7ed;
+  transform: translateY(-1px);
+}
+
+.hc-action-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+.hc-action-btn:hover {
+  animation: hcPulse 0.8s infinite;
+}
+
+@keyframes hcPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(39, 174, 202, 0);
+  }
+
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(39, 174, 202, 0.7);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(39, 174, 202, 0);
+  }
+}
+
+/* ================= HISTORIAL CLÍNICO LATERAL ================= */
+.hc-top-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 15px;
+  align-items: start;
+}
+
+.hc-paciente-panel {
+  width: 100%;
+}
+
+.hc-side-history {
+  background: #eef9fb;
+  border: 1px solid #0b6f88;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 270px;
+}
+
+.hc-side-header {
+  background: #0b6f88;
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+  padding: 7px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.hc-side-link {
+  width: 100%;
+  border: 1px solid #cfd8df;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hc-side-link:hover {
+  background: #dff5fa;
+}
+
+.hc-side-link span {
+  color: #0b6f88;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.hc-side-link strong {
+  color: #111827;
+  font-size: 13px;
+}
+
+.hc-historial-empty {
+  font-size: 13px;
+  color: #475569;
+  text-align: center;
+  padding: 10px;
+}
+
+.hc-imc-box {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #eef9ff;
+  border: 1px solid #b8e6ff;
+  color: #0b4e91;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hc-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .hc-top-layout {
+    grid-template-columns: 1fr;
+  }
+}
+/*para filtrar pacientes*/
+.hc-title-bar-con-filtros {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hc-title-bar-con-filtros h2 {
+  white-space: nowrap;
+}
+
+.hc-filtros {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  flex-wrap: nowrap;
+}
+
+.hc-filtro-fecha,
+.hc-filtro-estado {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #0b4e91;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.hc-filtro-fecha label,
+.hc-filtro-estado label {
+  background: #e9f5fb;
+  padding: 5px 6px;
+  border: 1px solid #b8dbe8;
+  color: #0b4e91;
+}
+
+.hc-filtro-fecha input,
+.hc-filtro-estado select {
+  height: 26px;
+  border: 1px solid #7b8b96;
+  border-radius: 0;
+  padding: 0 6px;
+  font-size: 12px;
+  background: #ffffff;
+}
+
+.hc-menu-container {
+  position: relative;
+}
+
+.hc-menu-btn {
+  width: 27px;
+  height: 27px;
+  border: 1px solid #7b8b96;
+  border-radius: 3px;
+  background: #e9f5fb;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.hc-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  width: 140px;
+  background: white;
+  border: 1px solid #b8dbe8;
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.hc-menu-dropdown button {
+  width: 100%;
+  border: none;
+  background: white;
+  padding: 9px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hc-menu-dropdown button:hover {
+  background: #eef9fb;
+}
+
+/* ========== NUEVA ESTRUCTURA ESTILO IMAGEN ========== */
+
+.hc-patient-header {
+  background: #f1f5f9;
+  border-bottom: 2px solid #cbd5e1;
+  padding: 16px 20px;
+}
+
+.hc-patient-header-title {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #1e4a76;
+  margin-bottom: 14px;
+  border-left: 4px solid #27aeca;
+  padding-left: 10px;
+}
+
+.hc-patient-data-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 40px;
+}
+
+.hc-data-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-bottom: 1px dashed #cbd5e6;
+  padding-bottom: 6px;
+  min-width: 200px;
+}
+
+.hc-data-label {
+  font-weight: 800;
+  font-size: 12px;
+  color: #0f3b5f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 110px;
+}
+
+.hc-data-value {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.hc-section-field {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e9edf2;
+}
+
+.hc-field-header {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1e4a76;
+  margin-bottom: 12px;
+  border-left: 4px solid #27aeca;
+  padding-left: 10px;
+}
+
+.hc-field-textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  background: #fefefe;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.hc-field-textarea:focus {
+  outline: none;
+  border-color: #27aeca;
+  box-shadow: 0 0 0 2px rgba(39, 174, 202, 0.2);
+}
+
+.hc-signos-vitales {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px 20px;
+  margin-bottom: 12px;
+}
+
+.hc-signo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hc-signo-item label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f3b5f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hc-signo-item input {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.hc-signo-item input:focus {
+  outline: none;
+  border-color: #27aeca;
+}
+
+.hc-imc-display {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #eef2ff;
+  border-radius: 8px;
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: #1e3a5f;
+}
+
+@media (max-width: 640px) {
+  .hc-patient-data-grid {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hc-data-row {
+    flex-wrap: wrap;
+  }
+
+  .hc-signos-vitales {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-imc-display {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

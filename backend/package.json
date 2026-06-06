@@ -1,0 +1,16 @@
+{
+  "name": "saludya-backend",
+  "version": "1.0.0",
+  "main": "config/server.js",
+  "scripts": {
+    "start": "node config/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.5.0",
+    "pdfkit": "^0.18.0"
+  }
+}
