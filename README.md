@@ -1,5 +1,83 @@
 # SaludYa - README de Pruebas de Software
 
+## El repositorio de SaludYa cuenta con un archivo README que documenta los aspectos fundamentales del proyecto.
+
+# Contenido del README
+Descripción general del sistema SaludYa.
+Objetivos del proyecto.
+Tecnologías utilizadas.
+Arquitectura general del sistema.
+Requisitos previos.
+Instalación local.
+Configuración de variables de entorno.
+Ejecución del frontend y backend.
+Despliegue en producción.
+Pruebas automatizadas.
+Estructura de carpetas.
+Información de los autores.
+
+El README facilita la instalación, ejecución y comprensión general del proyecto por parte de nuevos desarrolladores.
+
+# Documentación de API
+
+La API REST del backend fue documentada mediante Swagger, permitiendo consultar de forma interactiva los endpoints disponibles del sistema.
+
+# Endpoints documentados
+Autenticación
+POST /api/auth/login
+Pacientes
+GET /api/pacientes
+POST /api/pacientes
+PUT /api/pacientes/:id
+DELETE /api/pacientes/:id
+Citas
+GET /api/citas
+POST /api/citas
+PUT /api/citas/:id
+DELETE /api/citas/:id
+Historias Clínicas
+GET /api/historias
+POST /api/historias
+Facturación
+GET /api/facturas
+POST /api/facturas
+Configuración
+GET /api/usuarios
+POST /api/usuarios
+GET /api/medicos
+POST /api/medicos
+GET /api/procedimientos
+POST /api/procedimientos
+GET /api/laboratorios
+POST /api/laboratorios
+
+La documentación Swagger permite realizar pruebas y visualizar la estructura de las peticiones y respuestas del sistema.
+
+# Documentación del código
+
+Se implementó documentación interna mediante comentarios descriptivos y estructura modular del código.
+
+## Ejemplo de documentación JSDoc
+/**
+ * Autentica un usuario del sistema
+ * @param {Object} credenciales
+ * @param {string} credenciales.username
+ * @param {string} credenciales.password
+ * @returns {Object} Token JWT y datos del usuario
+ */
+async function login(credenciales) {
+  ...
+}
+Componentes documentados
+Controladores
+Servicios
+Modelos
+Utilidades JWT
+Configuración de conexión MongoDB
+Componentes principales de React
+
+La documentación facilita futuras tareas de mantenimiento y evolución del sistema.
+
 ## 1. Descripción general
 
 Este README documenta las pruebas de software configuradas para el proyecto **SaludYa**, sistema web para la gestión clínica y administrativa de consultorios médicos.
