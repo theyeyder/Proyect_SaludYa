@@ -1,3 +1,12 @@
+/**
+ * Registra una nueva cita médica.
+ *
+ * @async
+ * @function crearCita
+ * @param {Object} datosCita Información de la cita.
+ * @returns {Promise<Object>} Cita registrada.
+ */
+
 const Cita = require("./cita.model");
 
 exports.crear = async (data) => {

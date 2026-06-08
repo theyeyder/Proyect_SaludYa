@@ -1,3 +1,12 @@
+/**
+ * Registra una historia clínica para un paciente.
+ *
+ * @async
+ * @function crearHistoria
+ * @param {Object} datosHistoria Información clínica.
+ * @returns {Promise<Object>} Historia clínica registrada.
+ */
+
 const Historia = require("./historia.model");
 const Cita = require("../citas/cita.model");
 

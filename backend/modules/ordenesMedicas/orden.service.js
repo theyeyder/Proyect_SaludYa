@@ -1,3 +1,12 @@
+/**
+ * Genera una orden médica.
+ *
+ * @async
+ * @function crearOrden
+ * @param {Object} datosOrden Información de la orden.
+ * @returns {Promise<Object>} Orden médica registrada.
+ */
+
 const Orden = require("./orden.model");
 
 async function crear(data) {

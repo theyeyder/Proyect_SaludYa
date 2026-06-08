@@ -1,3 +1,15 @@
+/**
+ * Inicia sesión en el sistema SaludYa.
+ *
+ * Valida las credenciales del usuario y genera un token JWT.
+ *
+ * @async
+ * @function login
+ * @param {Object} req Solicitud HTTP.
+ * @param {Object} res Respuesta HTTP.
+ * @returns {Object} Token de autenticación y datos del usuario.
+ */
+
 const { generarToken } = require("../../utils/jwt");
 const Usuario = require("../configuracion/usuario.model");
 

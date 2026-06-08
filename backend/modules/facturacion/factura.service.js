@@ -1,3 +1,12 @@
+/**
+ * Genera una factura para los servicios prestados.
+ *
+ * @async
+ * @function crearFactura
+ * @param {Object} datosFactura Información de facturación.
+ * @returns {Promise<Object>} Factura generada.
+ */
+
 const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");

@@ -1,3 +1,12 @@
+/**
+ * Registra un nuevo paciente en la base de datos.
+ *
+ * @async
+ * @function crearPaciente
+ * @param {Object} datosPaciente Información del paciente.
+ * @returns {Promise<Object>} Paciente creado.
+ */
+
 const Paciente = require("./paciente.model");
 
 const crearPaciente = (data) => Paciente.create(data);
